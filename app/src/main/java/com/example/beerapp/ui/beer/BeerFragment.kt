@@ -5,30 +5,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.beerapp.databinding.FragmentBeerBinding
+import com.example.beerapp.ui.model.Beer
+import com.example.beerapp.ui.pager.PagerViewModel
 
-private const val ARG_NAME = "name"
+private const val ARG_POSITION = "position"
 
 class BeerFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: String) =
+        fun newInstance(position: Int) =
             BeerFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_NAME, param1)
+                    putInt(ARG_POSITION, position)
                 }
             }
     }
 
-    private var name: String? = null
-
+    private val viewModel: PagerViewModel by activityViewModels()
+    private lateinit var beer: Beer
     private lateinit var binding: FragmentBeerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            name = it.getString(ARG_NAME)
+            val position = it.getInt(ARG_POSITION)
+            beer = viewModel.beers[position]
         }
     }
 
@@ -42,6 +46,7 @@ class BeerFragment : Fragment() {
     }
 
     private fun bindData() {
-        binding.name.text = name
+        binding.name.text = beer.name
+        binding.likeButton.setOnClickListener { beer.likeAction() }
     }
 }

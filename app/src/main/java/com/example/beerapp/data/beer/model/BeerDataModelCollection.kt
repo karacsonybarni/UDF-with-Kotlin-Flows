@@ -1,11 +1,12 @@
 package com.example.beerapp.data.beer.model
 
-data class BeerCollection(val beers: Array<Beer>) {
+data class BeerDataModelCollection(val beers: Array<BeerDataModel>) {
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as BeerCollection
+        other as BeerDataModelCollection
 
         if (!beers.contentEquals(other.beers)) return false
 

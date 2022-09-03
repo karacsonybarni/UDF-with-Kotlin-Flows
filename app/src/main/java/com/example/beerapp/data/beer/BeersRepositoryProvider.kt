@@ -11,7 +11,9 @@ object BeersRepositoryProvider {
         var localInstance = instance
         if (localInstance == null) {
             val beersApiService = RetrofitProvider.instance.create(BeersApiService::class.java)
-            localInstance = BeersRepository(BeersRemoteDataSource(beersApiService))
+            val remoteDataSource = BeersRemoteDataSource(beersApiService)
+            val localDataSource = BeersLocalDataSource(remoteDataSource.beerCollectionFlow)
+            localInstance = BeersRepository(remoteDataSource, localDataSource)
             instance = localInstance
         }
         return localInstance

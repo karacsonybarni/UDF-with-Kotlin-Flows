@@ -39,14 +39,17 @@ class PagerFragment : Fragment() {
 
     private fun setupPager() {
         adapter = PagerAdapter(this)
-        binding.pager.adapter = adapter
+
+        val pager = binding.pager
+        pager.adapter = adapter
+        pager.isUserInputEnabled = false
     }
 
     private fun updateBeers() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.beerCollectionFlow.collect { beerCollection ->
-                    adapter.beerCollection = beerCollection
+                viewModel.beersFlow.collect { beers ->
+                    adapter.notifyDataSetChanged(beers.size)
                 }
             }
         }

@@ -1,10 +1,17 @@
 package com.example.beerapp.data.beer
 
-class BeersRepository(private val beersDataSource: BeersRemoteDataSource) {
+class BeersRepository(
+    private val remoteDataSource: BeersRemoteDataSource,
+    private val localDataSource: BeersLocalDataSource
+) {
 
-    val beerCollectionFlow = beersDataSource.beerCollectionFlow
+    val beerCollectionFlow = localDataSource.beerCollectionFlow
 
     suspend fun fetch() {
-        beersDataSource.fetch()
+        remoteDataSource.fetch()
+    }
+
+    fun like(id: Int) {
+        localDataSource.like(id)
     }
 }
