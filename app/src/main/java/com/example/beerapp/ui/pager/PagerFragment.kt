@@ -57,9 +57,11 @@ class PagerFragment : Fragment() {
             }
         }
         lifecycleScope.launch {
-            viewModel.positionFlow.collect { position ->
-                if (position != null) {
-                    pager.currentItem = position
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.positionFlow.collect { position ->
+                    if (position != null) {
+                        pager.currentItem = position
+                    }
                 }
             }
         }
