@@ -2,4 +2,5 @@
     <string name="app_name">BeerApp</string>
     <string name="like">Like</string>
     <string name="dislike">Dislike</string>
+    <string name="picture_of_a_beer">Picture of a beer</string>
 </resources>

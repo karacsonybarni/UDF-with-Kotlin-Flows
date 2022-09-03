@@ -56,7 +56,7 @@ class PagerViewModel(
         val dislikeAction = {
             nextBeer()
         }
-        return Beer(beer.id, beer.name, likeAction, dislikeAction)
+        return Beer(beer.id, beer.name, beer.tagLine, beer.imageUrl, likeAction, dislikeAction)
     }
 
     private fun nextBeer() {

@@ -4,10 +4,13 @@
     <!-- Card -->
     <dimen name="card_elevation">8dp</dimen>
     <dimen name="card_margin">16dp</dimen>
-    <dimen name="card_beerName_textSize">20sp</dimen>
-    <dimen name="button_margin">16dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="card_image_margin">16dp</dimen>
+    <dimen name="card_name_textSize">20sp</dimen>
+    <dimen name="card_tagline_textSize">16sp</dimen>
+    <dimen name="card_button_margin">16dp</dimen>
 
     <!-- List item -->
     <dimen name="item_margin">16dp</dimen>
-    <dimen name="item_beerName_textSize">20sp</dimen>
+    <dimen name="item_name_textSize">20sp</dimen>
 </resources>

@@ -8,6 +8,6 @@
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/item_beerName_textSize" />
+        android:textSize="@dimen/item_name_textSize" />
 
 </LinearLayout>

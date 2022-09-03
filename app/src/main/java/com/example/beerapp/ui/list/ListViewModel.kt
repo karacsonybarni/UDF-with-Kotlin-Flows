@@ -23,6 +23,6 @@ class ListViewModel(private val beersRepository: BeersRepository = BeersReposito
     }
 
     private fun toBeer(beer: BeerDataModel): Beer {
-        return Beer(beer.id, beer.name, {}, {})
+        return Beer(beer.id, beer.name, beer.tagLine, beer.imageUrl, {}, {})
     }
 }

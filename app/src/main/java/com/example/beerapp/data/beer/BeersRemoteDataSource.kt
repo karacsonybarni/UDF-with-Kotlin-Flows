@@ -28,5 +28,6 @@ class BeersRemoteDataSource(
         }
     }
 
-    private fun toBeer(id: Int, beerEntity: BeerEntity) = BeerDataModel(id, beerEntity.name)
+    private fun toBeer(id: Int, beerEntity: BeerEntity) =
+        BeerDataModel(id, beerEntity.name, beerEntity.tagline, beerEntity.imageUrl)
 }

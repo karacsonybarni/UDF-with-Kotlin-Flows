@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.beerapp.databinding.FragmentBeerBinding
 import com.example.beerapp.ui.model.Beer
+import com.squareup.picasso.Picasso
 
 private const val ARG_POSITION = "position"
 
@@ -45,7 +46,9 @@ class BeerFragment : Fragment() {
     }
 
     private fun bindData() {
+        beer.imageUrl?.let { loadImage(it) }
         binding.name.text = beer.name
+        binding.tagline.text = beer.tagline
         binding.likeButton.setOnClickListener {
             it.isEnabled = false
             beer.likeAction()
@@ -54,5 +57,14 @@ class BeerFragment : Fragment() {
             it.isEnabled = false
             beer.dislikeAction()
         }
+    }
+
+    private fun loadImage(url: String) {
+        Picasso
+            .get()
+            .load(url)
+            .resize(2048, 0)
+            .onlyScaleDown()
+            .into(binding.image)
     }
 }
