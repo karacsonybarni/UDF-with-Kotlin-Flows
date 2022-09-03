@@ -51,5 +51,9 @@ class BeerFragment : Fragment() {
             it.isEnabled = false
             beer.likeAction()
         }
+        binding.dislikeButton.setOnClickListener {
+            it.isEnabled = false
+            beer.dislikeAction()
+        }
     }
 }

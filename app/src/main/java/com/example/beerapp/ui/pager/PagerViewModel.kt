@@ -44,10 +44,14 @@ class PagerViewModel : ViewModel() {
     }
 
     private fun toBeer(beer: BeerDataModel): Beer {
-        return Beer(beer.id, beer.name) {
+        val likeAction = {
             beersRepository.like(beer.id)
             nextBeer()
         }
+        val dislikeAction = {
+            nextBeer()
+        }
+        return Beer(beer.id, beer.name, likeAction, dislikeAction)
     }
 
     private fun nextBeer() {

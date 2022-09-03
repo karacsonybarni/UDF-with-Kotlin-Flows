@@ -1,3 +1,8 @@
 package com.example.beerapp.ui.model
 
-data class Beer(val id: Int, val name: String, val likeAction: () -> Unit)
+data class Beer(
+    val id: Int,
+    val name: String,
+    val likeAction: () -> Unit,
+    val dislikeAction: () -> Unit
+)
