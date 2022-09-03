@@ -3,4 +3,5 @@
     <string name="like">Like</string>
     <string name="dislike">Dislike</string>
     <string name="picture_of_a_beer">Picture of a beer</string>
+    <string name="liked_beers">Liked beers:</string>
 </resources>

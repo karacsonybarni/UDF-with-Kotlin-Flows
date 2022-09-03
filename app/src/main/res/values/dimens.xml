@@ -10,6 +10,10 @@
     <dimen name="card_tagline_textSize">16sp</dimen>
     <dimen name="card_button_margin">16dp</dimen>
 
+    <!-- List -->
+    <dimen name="title_textSize">24sp</dimen>
+    <dimen name="title_margin">16dp</dimen>
+
     <!-- List item -->
     <dimen name="item_margin">16dp</dimen>
     <dimen name="item_name_textSize">20sp</dimen>
