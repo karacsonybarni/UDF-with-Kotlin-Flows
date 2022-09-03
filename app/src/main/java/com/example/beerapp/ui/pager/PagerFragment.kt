@@ -1,4 +1,4 @@
-package com.example.beerapp.ui.main
+package com.example.beerapp.ui.pager
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,34 +9,44 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.beerapp.R
+import com.example.beerapp.databinding.FragmentPagerBinding
 import kotlinx.coroutines.launch
 
-class MainFragment : Fragment() {
+class PagerFragment : Fragment() {
 
     companion object {
-        fun newInstance() = MainFragment()
+        fun newInstance() = PagerFragment()
     }
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: PagerViewModel by activityViewModels()
+
+    private lateinit var binding: FragmentPagerBinding
+    private lateinit var adapter: PagerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        binding = FragmentPagerBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupPager()
         updateBeers()
+    }
+
+    private fun setupPager() {
+        adapter = PagerAdapter(this)
+        binding.pager.adapter = adapter
     }
 
     private fun updateBeers() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.beerCollectionFlow.collect { beerCollection ->
-                    println(beerCollection)
+                    adapter.beerCollection = beerCollection
                 }
             }
         }
