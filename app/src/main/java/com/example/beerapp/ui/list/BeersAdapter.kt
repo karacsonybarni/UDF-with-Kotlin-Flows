@@ -2,9 +2,11 @@ package com.example.beerapp.ui.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.beerapp.databinding.ItemBeerBinding
 import com.example.beerapp.ui.model.Beer
+import com.squareup.picasso.Picasso
 
 class BeersAdapter : RecyclerView.Adapter<BeerViewHolder>() {
 
@@ -20,9 +22,20 @@ class BeersAdapter : RecyclerView.Adapter<BeerViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: BeerViewHolder, position: Int) {
-        beers?.let {
-            holder.bind(it[position])
-        }
+        val beer = beers?.get(position) ?: return
+
+        val binding = holder.binding
+        binding.name.text = beer.name
+        beer.imageUrl?.let { loadImage(it, binding.image) }
+    }
+
+    private fun loadImage(url: String, imageView: ImageView) {
+        Picasso
+            .get()
+            .load(url)
+            .resize(800, 0)
+            .onlyScaleDown()
+            .into(imageView)
     }
 
     override fun getItemCount() = beers?.size ?: 0
