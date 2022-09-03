@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BeerApp</string>
+    <string name="like">Like</string>
+    <string name="dislike">Dislike</string>
 </resources>
