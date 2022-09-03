@@ -1,5 +1,7 @@
 package com.example.beerapp.data.beer
 
+import com.example.beerapp.data.beer.model.BeerDataModelCollection
+
 class BeersRepository(
     private val remoteDataSource: BeersRemoteDataSource,
     private val localDataSource: BeersLocalDataSource
@@ -17,5 +19,9 @@ class BeersRepository(
 
     fun like(id: Int) {
         localDataSource.like(id)
+    }
+
+    suspend fun getLikedBeerCollection(): BeerDataModelCollection {
+        return localDataSource.getLikedBeerCollection()
     }
 }

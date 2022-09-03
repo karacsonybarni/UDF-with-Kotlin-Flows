@@ -4,6 +4,10 @@
     <!-- Card -->
     <dimen name="card_elevation">8dp</dimen>
     <dimen name="card_margin">16dp</dimen>
-    <dimen name="beerName_textSize">20sp</dimen>
+    <dimen name="card_beerName_textSize">20sp</dimen>
     <dimen name="button_margin">16dp</dimen>
+
+    <!-- List item -->
+    <dimen name="item_margin">16dp</dimen>
+    <dimen name="item_beerName_textSize">20sp</dimen>
 </resources>
