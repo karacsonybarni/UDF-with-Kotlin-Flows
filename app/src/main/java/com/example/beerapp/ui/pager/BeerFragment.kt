@@ -1,4 +1,4 @@
-package com.example.beerapp.ui.beer
+package com.example.beerapp.ui.pager
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.beerapp.databinding.FragmentBeerBinding
 import com.example.beerapp.ui.model.Beer
-import com.example.beerapp.ui.pager.PagerViewModel
 
 private const val ARG_POSITION = "position"
 

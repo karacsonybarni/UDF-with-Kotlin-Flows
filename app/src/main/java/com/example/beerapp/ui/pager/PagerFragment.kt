@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import com.example.beerapp.databinding.FragmentPagerBinding
+import com.example.beerapp.ui.MainViewModel
 import kotlinx.coroutines.launch
 
 class PagerFragment : Fragment() {
@@ -19,7 +20,10 @@ class PagerFragment : Fragment() {
         fun newInstance() = PagerFragment()
     }
 
-    private val viewModel: PagerViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val pagerViewModel: PagerViewModel by activityViewModels {
+        PagerViewModel.getFactory { mainViewModel.onPagerEnd() }
+    }
 
     private lateinit var binding: FragmentPagerBinding
     private lateinit var adapter: PagerAdapter
@@ -51,14 +55,14 @@ class PagerFragment : Fragment() {
         val lifecycleScope = viewLifecycleOwner.lifecycleScope
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.beersFlow.collect { beers ->
+                pagerViewModel.beersFlow.collect { beers ->
                     adapter.notifyDataSetChanged(beers.size)
                 }
             }
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.positionFlow.collect { position ->
+                pagerViewModel.positionFlow.collect { position ->
                     if (position != null) {
                         pager.currentItem = position
                     }

@@ -2,7 +2,6 @@ package com.example.beerapp.ui.pager
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.beerapp.ui.beer.BeerFragment
 
 class PagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
