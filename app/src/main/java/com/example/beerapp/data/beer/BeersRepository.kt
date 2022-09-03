@@ -5,10 +5,14 @@ class BeersRepository(
     private val localDataSource: BeersLocalDataSource
 ) {
 
+    companion object {
+        private const val collectionSize = 10
+    }
+
     val beerCollectionFlow = localDataSource.beerCollectionFlow
 
     suspend fun fetch() {
-        remoteDataSource.fetch()
+        remoteDataSource.fetch(collectionSize)
     }
 
     fun like(id: Int) {

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -17,13 +18,12 @@ import kotlinx.coroutines.launch
 class PagerFragment : Fragment() {
 
     companion object {
+        const val tag = "PagerFragment"
         fun newInstance() = PagerFragment()
     }
 
     private val mainViewModel: MainViewModel by activityViewModels()
-    private val pagerViewModel: PagerViewModel by activityViewModels {
-        PagerViewModel.getFactory { mainViewModel.onPagerEnd() }
-    }
+    private val pagerViewModel: PagerViewModel by viewModels()
 
     private lateinit var binding: FragmentPagerBinding
     private lateinit var adapter: PagerAdapter
@@ -39,8 +39,13 @@ class PagerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupViewModel()
         setupPager()
         collectFlows()
+    }
+
+    private fun setupViewModel() {
+        pagerViewModel.onPagerEnd = { mainViewModel.onPagerEnd() }
     }
 
     private fun setupPager() {

@@ -15,33 +15,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class PagerViewModel(
-    private val onPagerEnd: () -> Unit,
-    private val beersRepository: BeersRepository
+    private val beersRepository: BeersRepository = BeersRepositoryProvider.get()
 ) : ViewModel() {
-
-    private class PagerViewModelFactory(
-        private val onPagerEnd: () -> Unit,
-        private val beersRepository: BeersRepository = BeersRepositoryProvider.get()
-    ) : ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-            return PagerViewModel(onPagerEnd, beersRepository) as T
-        }
-    }
-
-    companion object {
-
-        private var factory: ViewModelProvider.Factory? = null
-
-        fun getFactory(onPagerEnd: () -> Unit): ViewModelProvider.Factory {
-            var instance = factory
-            if (instance == null) {
-                instance = PagerViewModelFactory(onPagerEnd)
-                factory = instance
-            }
-            return instance
-        }
-    }
 
     private val _beersFlow = MutableStateFlow<Array<Beer>>(emptyArray())
     val beersFlow = _beersFlow.asStateFlow()
@@ -51,6 +26,8 @@ class PagerViewModel(
 
     lateinit var beers: Array<Beer>
         private set
+
+    var onPagerEnd: (() -> Unit)? = null
 
     init {
         viewModelScope.launch {
@@ -88,7 +65,7 @@ class PagerViewModel(
         if (nextPosition < beers.size) {
             _positionFlow.value = nextPosition
         } else {
-            onPagerEnd()
+            onPagerEnd?.invoke()
         }
     }
 }

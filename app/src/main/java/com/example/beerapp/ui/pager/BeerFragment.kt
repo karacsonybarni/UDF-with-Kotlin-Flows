@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.example.beerapp.databinding.FragmentBeerBinding
 import com.example.beerapp.ui.model.Beer
 
@@ -23,7 +23,7 @@ class BeerFragment : Fragment() {
             }
     }
 
-    private val viewModel: PagerViewModel by activityViewModels()
+    private val viewModel: PagerViewModel by viewModels({ requireParentFragment() })
     private lateinit var beer: Beer
     private lateinit var binding: FragmentBeerBinding
 

@@ -15,14 +15,10 @@ class BeersRemoteDataSource(
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-    companion object {
-        private const val collectionSize = 10
-    }
-
     private val _beerCollectionFlow = MutableStateFlow(BeerDataModelCollection(emptyArray()))
     val beerCollectionFlow = _beerCollectionFlow.asStateFlow()
 
-    suspend fun fetch() {
+    suspend fun fetch(collectionSize: Int) {
         withContext(coroutineDispatcher) {
             val beers = Array(collectionSize) { i ->
                 val beerEntity = beersApiService.getRandomBeer()[0]
