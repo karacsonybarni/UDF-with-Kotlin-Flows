@@ -47,6 +47,9 @@ class BeerFragment : Fragment() {
 
     private fun bindData() {
         binding.name.text = beer.name
-        binding.likeButton.setOnClickListener { beer.likeAction() }
+        binding.likeButton.setOnClickListener {
+            it.isEnabled = false
+            beer.likeAction()
+        }
     }
 }

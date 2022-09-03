@@ -18,6 +18,9 @@ class PagerViewModel : ViewModel() {
     private val _beersFlow = MutableStateFlow<Array<Beer>>(emptyArray())
     val beersFlow = _beersFlow.asStateFlow()
 
+    private val _positionFlow = MutableStateFlow<Int?>(null)
+    val positionFlow = _positionFlow.asStateFlow()
+
     lateinit var beers: Array<Beer>
         private set
 
@@ -41,6 +44,17 @@ class PagerViewModel : ViewModel() {
     }
 
     private fun toBeer(beer: BeerDataModel): Beer {
-        return Beer(beer.id, beer.name) { beersRepository.like(beer.id) }
+        return Beer(beer.id, beer.name) {
+            beersRepository.like(beer.id)
+            nextBeer()
+        }
+    }
+
+    private fun nextBeer() {
+        val currentPosition = _positionFlow.value ?: 0
+        val nextPosition = currentPosition + 1
+        if (nextPosition < beers.size) {
+            _positionFlow.value = nextPosition
+        }
     }
 }
