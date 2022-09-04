@@ -62,7 +62,9 @@ class PagerFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 pagerViewModel.beersFlow.collect { beers ->
                     adapter.notifyDataSetChanged(beers.size)
-                    pagerViewModel.positionFlow.value?.let { pager.currentItem = it }
+                    pagerViewModel.positionFlow.value?.let {
+                        pager.setCurrentItem(it, false)
+                    }
                 }
             }
         }
