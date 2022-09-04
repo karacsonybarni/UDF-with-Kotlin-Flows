@@ -62,13 +62,14 @@ class PagerFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 pagerViewModel.beersFlow.collect { beers ->
                     adapter.notifyDataSetChanged(beers.size)
+                    pagerViewModel.positionFlow.value?.let { pager.currentItem = it }
                 }
             }
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 pagerViewModel.positionFlow.collect { position ->
-                    if (position != null) {
+                    if (position != null && position < adapter.itemCount) {
                         pager.currentItem = position
                     }
                 }

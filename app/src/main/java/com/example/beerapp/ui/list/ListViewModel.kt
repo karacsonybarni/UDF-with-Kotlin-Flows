@@ -6,13 +6,19 @@ import com.example.beerapp.data.beer.BeersRepositoryProvider
 import com.example.beerapp.data.beer.model.BeerDataModel
 import com.example.beerapp.data.beer.model.BeerDataModelCollection
 import com.example.beerapp.ui.model.Beer
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class ListViewModel(private val beersRepository: BeersRepository = BeersRepositoryProvider.get()) :
+class ListViewModel(
+    private val beersRepository: BeersRepository = BeersRepositoryProvider.get(),
+    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
+) :
     ViewModel() {
 
-    suspend fun getLikedBeers(): Array<Beer> {
+    suspend fun getLikedBeers() = withContext(dispatcher) {
         val beerCollection = beersRepository.getLikedBeerCollection()
-        return toBeerArray(beerCollection)
+        toBeerArray(beerCollection)
     }
 
     private fun toBeerArray(beerCollection: BeerDataModelCollection): Array<Beer> {

@@ -1,25 +1,26 @@
 package com.example.beerapp.ui.pager
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.beerapp.data.beer.BeersRepository
 import com.example.beerapp.data.beer.BeersRepositoryProvider
 import com.example.beerapp.data.beer.model.BeerDataModel
 import com.example.beerapp.data.beer.model.BeerDataModelCollection
 import com.example.beerapp.ui.model.Beer
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class PagerViewModel(
-    private val beersRepository: BeersRepository = BeersRepositoryProvider.get()
+    private val beersRepository: BeersRepository = BeersRepositoryProvider.get(),
+    coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ViewModel() {
 
-    private val _beersFlow = MutableStateFlow<Array<Beer>>(emptyArray())
-    val beersFlow = _beersFlow.asStateFlow()
+    val beersFlow = beersRepository.beerCollectionFlow
+        .map { toBeerArray(it) }
+        .onEach { beers = it }
+        .flowOn(coroutineDispatcher)
 
     private val _positionFlow = MutableStateFlow<Int?>(null)
     val positionFlow = _positionFlow.asStateFlow()
@@ -32,12 +33,6 @@ class PagerViewModel(
     init {
         viewModelScope.launch {
             beersRepository.fetch()
-            beersRepository.beerCollectionFlow
-                .map { toBeerArray(it) }
-                .collect {
-                    beers = it
-                    _beersFlow.value = it
-                }
         }
     }
 
