@@ -4,7 +4,5 @@ data class Beer(
     val id: Int,
     val name: String,
     val tagline: String,
-    val imageUrl: String?,
-    val likeAction: () -> Unit,
-    val dislikeAction: () -> Unit
+    val imageUrl: String?
 )

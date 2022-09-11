@@ -22,13 +22,15 @@ class PagerViewModel(
         .onEach { beers = it }
         .flowOn(coroutineDispatcher)
 
-    private val _positionFlow = MutableStateFlow<Int?>(null)
-    val positionFlow = _positionFlow.asStateFlow()
+    private val _currentItemIndexFlow = MutableStateFlow<Int?>(null)
+    val currentItemIndexFlow = _currentItemIndexFlow.asStateFlow()
+
+    private val nextItemIndex: Int get() = (currentItemIndexFlow.value ?: 0) + 1
+
+    val hasNextBeer: Boolean get() = nextItemIndex < beers.size
 
     lateinit var beers: Array<Beer>
         private set
-
-    var onPagerEnd: (() -> Unit)? = null
 
     init {
         viewModelScope.launch {
@@ -44,23 +46,14 @@ class PagerViewModel(
     }
 
     private fun toBeer(beer: BeerDataModel): Beer {
-        val likeAction = {
-            beersRepository.like(beer.id)
-            nextBeer()
-        }
-        val dislikeAction = {
-            nextBeer()
-        }
-        return Beer(beer.id, beer.name, beer.tagLine, beer.imageUrl, likeAction, dislikeAction)
+        return Beer(beer.id, beer.name, beer.tagLine, beer.imageUrl)
     }
 
-    private fun nextBeer() {
-        val currentPosition = _positionFlow.value ?: 0
-        val nextPosition = currentPosition + 1
-        if (nextPosition < beers.size) {
-            _positionFlow.value = nextPosition
-        } else {
-            onPagerEnd?.invoke()
-        }
+    fun like(beer: Beer) {
+        beersRepository.like(beer.id)
+    }
+
+    fun pageToNextBeer() {
+        _currentItemIndexFlow.value = nextItemIndex
     }
 }

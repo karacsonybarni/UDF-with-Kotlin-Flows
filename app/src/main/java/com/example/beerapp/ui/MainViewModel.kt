@@ -9,7 +9,7 @@ class MainViewModel : ViewModel() {
     private val _mainStateFlow = MutableStateFlow(MainState.BeersPager)
     val mainStateFlow = _mainStateFlow.asStateFlow()
 
-    fun onPagerEnd() {
+    fun endPager() {
         _mainStateFlow.value = MainState.LikedBeersList
     }
 }

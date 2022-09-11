@@ -5,14 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import com.example.beerapp.databinding.FragmentPagerBinding
-import com.example.beerapp.ui.MainViewModel
 import kotlinx.coroutines.launch
 
 class PagerFragment : Fragment() {
@@ -22,7 +20,6 @@ class PagerFragment : Fragment() {
         fun newInstance() = PagerFragment()
     }
 
-    private val mainViewModel: MainViewModel by activityViewModels()
     private val pagerViewModel: PagerViewModel by viewModels()
 
     private lateinit var binding: FragmentPagerBinding
@@ -39,13 +36,8 @@ class PagerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViewModel()
         setupPager()
         collectFlows()
-    }
-
-    private fun setupViewModel() {
-        pagerViewModel.onPagerEnd = { mainViewModel.onPagerEnd() }
     }
 
     private fun setupPager() {
@@ -62,17 +54,17 @@ class PagerFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 pagerViewModel.beersFlow.collect { beers ->
                     adapter.notifyDataSetChanged(beers.size)
-                    pagerViewModel.positionFlow.value?.let {
-                        pager.setCurrentItem(it, false)
+                    pagerViewModel.currentItemIndexFlow.value?.let { currentItem ->
+                        pager.setCurrentItem(currentItem, false)
                     }
                 }
             }
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                pagerViewModel.positionFlow.collect { position ->
-                    if (position != null && position < adapter.itemCount) {
-                        pager.currentItem = position
+                pagerViewModel.currentItemIndexFlow.collect { currentItem ->
+                    if (currentItem != null && currentItem < adapter.itemCount) {
+                        pager.currentItem = currentItem
                     }
                 }
             }

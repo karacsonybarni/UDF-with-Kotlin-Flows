@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.beerapp.databinding.FragmentBeerBinding
+import com.example.beerapp.ui.MainViewModel
 import com.example.beerapp.ui.model.Beer
 import com.squareup.picasso.Picasso
 
@@ -24,7 +26,8 @@ class BeerFragment : Fragment() {
             }
     }
 
-    private val viewModel: PagerViewModel by viewModels({ requireParentFragment() })
+    private val pagerViewModel: PagerViewModel by viewModels({ requireParentFragment() })
+    private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var beer: Beer
     private lateinit var binding: FragmentBeerBinding
 
@@ -32,7 +35,7 @@ class BeerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             val position = it.getInt(ARG_POSITION)
-            beer = viewModel.beers[position]
+            beer = pagerViewModel.beers[position]
         }
     }
 
@@ -51,11 +54,20 @@ class BeerFragment : Fragment() {
         binding.tagline.text = beer.tagline
         binding.likeButton.setOnClickListener {
             it.isEnabled = false
-            beer.likeAction()
+            pagerViewModel.like(beer)
+            pageToNextBeerOrEndPager()
         }
         binding.dislikeButton.setOnClickListener {
             it.isEnabled = false
-            beer.dislikeAction()
+            pageToNextBeerOrEndPager()
+        }
+    }
+
+    private fun pageToNextBeerOrEndPager() {
+        if (pagerViewModel.hasNextBeer) {
+            pagerViewModel.pageToNextBeer()
+        } else {
+            mainViewModel.endPager()
         }
     }
 

@@ -29,6 +29,6 @@ class ListViewModel(
     }
 
     private fun toBeer(beer: BeerDataModel): Beer {
-        return Beer(beer.id, beer.name, beer.tagLine, beer.imageUrl, {}, {})
+        return Beer(beer.id, beer.name, beer.tagLine, beer.imageUrl)
     }
 }
