@@ -8,7 +8,7 @@ class BeersRepository(
 ) {
 
     companion object {
-        private const val collectionSize = 10
+        private const val collectionSize = 1
     }
 
     val beerCollectionFlow = localDataSource.beerCollectionFlow
