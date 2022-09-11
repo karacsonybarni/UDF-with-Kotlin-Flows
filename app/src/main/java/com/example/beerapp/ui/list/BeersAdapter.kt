@@ -10,9 +10,15 @@ import com.squareup.picasso.Picasso
 
 class BeersAdapter : RecyclerView.Adapter<BeerViewHolder>() {
 
-    var beers: Array<Beer>? = null
-        set(value) {
-            field = value
+    private var beerArray: Array<Beer>? = null
+
+    var beers: Map<Long, Beer>? = null
+        set(beerMap) {
+            field = beerMap
+            beerArray = beers
+                ?.entries
+                ?.map { it.value }
+                ?.toTypedArray()
             notifyDataSetChanged()
         }
 
@@ -22,7 +28,7 @@ class BeersAdapter : RecyclerView.Adapter<BeerViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: BeerViewHolder, position: Int) {
-        val beer = beers?.get(position) ?: return
+        val beer = beerArray?.get(position) ?: return
 
         val binding = holder.binding
         binding.name.text = beer.name
@@ -38,5 +44,5 @@ class BeersAdapter : RecyclerView.Adapter<BeerViewHolder>() {
             .into(imageView)
     }
 
-    override fun getItemCount() = beers?.size ?: 0
+    override fun getItemCount() = beerArray?.size ?: 0
 }

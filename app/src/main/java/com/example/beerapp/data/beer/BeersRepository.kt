@@ -17,7 +17,7 @@ class BeersRepository(
         remoteDataSource.fetch(collectionSize)
     }
 
-    fun like(id: Int) {
+    fun like(id: Long) {
         localDataSource.like(id)
     }
 

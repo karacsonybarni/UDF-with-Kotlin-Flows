@@ -35,7 +35,7 @@ class BeerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             val position = it.getInt(ARG_POSITION)
-            beer = pagerViewModel.beers[position]
+            beer = pagerViewModel.beerArray[position]
         }
     }
 

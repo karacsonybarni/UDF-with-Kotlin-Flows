@@ -15,11 +15,6 @@ import kotlinx.coroutines.launch
 
 class ListFragment : Fragment() {
 
-    companion object {
-        const val tag = "ListFragment"
-        fun newInstance() = ListFragment()
-    }
-
     private val viewModel: ListViewModel by viewModels()
 
     private lateinit var binding: FragmentListBinding

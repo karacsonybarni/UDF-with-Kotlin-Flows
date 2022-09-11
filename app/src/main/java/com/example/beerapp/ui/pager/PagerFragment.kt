@@ -15,11 +15,6 @@ import kotlinx.coroutines.launch
 
 class PagerFragment : Fragment() {
 
-    companion object {
-        const val tag = "PagerFragment"
-        fun newInstance() = PagerFragment()
-    }
-
     private val pagerViewModel: PagerViewModel by viewModels()
 
     private lateinit var binding: FragmentPagerBinding
@@ -53,7 +48,7 @@ class PagerFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 pagerViewModel.beersFlow.collect { beers ->
-                    adapter.notifyDataSetChanged(beers.size)
+                    adapter.updateValues(beers)
                     pagerViewModel.currentItemIndexFlow.value?.let { currentItem ->
                         pager.setCurrentItem(currentItem, false)
                     }
