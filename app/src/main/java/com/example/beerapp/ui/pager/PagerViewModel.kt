@@ -16,10 +16,7 @@ class PagerViewModel(
     coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ViewModel() {
 
-    lateinit var beerArray: Array<Beer>
-        private set
-    lateinit var beerMap: Map<Long, Beer>
-        private set
+    private lateinit var beers: Map<Long, Beer>
 
     val beersFlow = beersRepository.beerCollectionFlow
         .map { beerCollection ->
@@ -28,12 +25,7 @@ class PagerViewModel(
             }
         }
         .onEach { map ->
-            beerMap = map
-
-            beerArray = map
-                .entries
-                .map { it.value }
-                .toTypedArray()
+            beers = map
         }
         .flowOn(coroutineDispatcher)
 
@@ -42,7 +34,7 @@ class PagerViewModel(
 
     private val nextItemIndex: Int get() = (currentItemIndexFlow.value ?: 0) + 1
 
-    val hasNextBeer: Boolean get() = nextItemIndex < beerMap.size
+    val hasNextBeer: Boolean get() = nextItemIndex < beers.size
 
     init {
         viewModelScope.launch {
@@ -57,4 +49,6 @@ class PagerViewModel(
     fun pageToNextBeer() {
         _currentItemIndexFlow.value = nextItemIndex
     }
+
+    fun getBeer(id: Long): Beer = beers[id]!!
 }

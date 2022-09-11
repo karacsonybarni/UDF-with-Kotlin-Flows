@@ -15,8 +15,12 @@ class BeersLocalDataSource(
 ) {
 
     private lateinit var beerCollection: BeerDataModelCollection
-    val beerCollectionFlow = beerCollectionFlow.onEach { beerCollection = it }
-    private val likedIds = TreeSet<Long>()
+    private var likedIds = TreeSet<Long>()
+
+    val beerCollectionFlow = beerCollectionFlow
+        .onEach {
+            beerCollection = it
+        }
 
     fun like(id: Long) {
         likedIds.add(id)
@@ -31,4 +35,8 @@ class BeersLocalDataSource(
             }
             BeerDataModelCollection(likedBeers)
         }
+
+    fun reset() {
+        likedIds = TreeSet<Long>()
+    }
 }

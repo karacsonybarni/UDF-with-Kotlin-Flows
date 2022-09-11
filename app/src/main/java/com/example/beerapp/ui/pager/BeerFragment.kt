@@ -12,16 +12,16 @@ import com.example.beerapp.ui.MainViewModel
 import com.example.beerapp.ui.model.Beer
 import com.squareup.picasso.Picasso
 
-private const val ARG_POSITION = "position"
+private const val ARG_ID = "position"
 
 class BeerFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(position: Int) =
+        fun newInstance(id: Long) =
             BeerFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_POSITION, position)
+                    putLong(ARG_ID, id)
                 }
             }
     }
@@ -34,8 +34,8 @@ class BeerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            val position = it.getInt(ARG_POSITION)
-            beer = pagerViewModel.beerArray[position]
+            val id = it.getLong(ARG_ID)
+            beer = pagerViewModel.getBeer(id)
         }
     }
 

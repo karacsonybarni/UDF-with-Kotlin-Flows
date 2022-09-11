@@ -6,16 +6,27 @@ import com.example.beerapp.ui.model.Beer
 
 class PagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
-    private var beers: Map<Long, Beer> = HashMap()
+    private var beerMap = emptyMap<Long, Beer>()
+    private var beerArray = emptyArray<Beer>()
 
     fun updateValues(beers: Map<Long, Beer>) {
-        this.beers = beers
+        beerMap = beers
+        beerArray = beers.entries.map { it.value }.toTypedArray()
         notifyDataSetChanged()
     }
 
-    override fun getItemCount() = beers.size
+    override fun getItemCount() = beerArray.size
 
     override fun createFragment(position: Int): Fragment {
-        return BeerFragment.newInstance(position)
+        val id = beerArray[position].id
+        return BeerFragment.newInstance(id)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return beerArray[position].id
+    }
+
+    override fun containsItem(itemId: Long): Boolean {
+        return beerMap.contains(itemId)
     }
 }
