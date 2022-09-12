@@ -1,9 +1,9 @@
-package com.example.beerapp.data.beer
+package com.example.beerapp.data
 
-import com.example.beerapp.data.beer.model.BeerDataModel
-import com.example.beerapp.data.beer.model.BeerDataModelCollection
-import com.example.beerapp.data.beer.network.BeersApiService
-import com.example.beerapp.data.beer.network.entity.BeerEntity
+import com.example.beerapp.data.model.BeerDataModel
+import com.example.beerapp.data.model.BeerDataModelCollection
+import com.example.beerapp.data.network.BeersApiService
+import com.example.beerapp.data.network.entity.BeerEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

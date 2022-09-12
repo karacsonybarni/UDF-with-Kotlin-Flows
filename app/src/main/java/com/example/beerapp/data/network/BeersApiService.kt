@@ -1,6 +1,6 @@
-package com.example.beerapp.data.beer.network
+package com.example.beerapp.data.network
 
-import com.example.beerapp.data.beer.network.entity.BeerEntity
+import com.example.beerapp.data.network.entity.BeerEntity
 import retrofit2.http.GET
 
 interface BeersApiService {

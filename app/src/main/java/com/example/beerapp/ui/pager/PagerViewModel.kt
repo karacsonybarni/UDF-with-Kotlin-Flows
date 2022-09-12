@@ -2,8 +2,8 @@ package com.example.beerapp.ui.pager
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.beerapp.data.beer.BeersRepository
-import com.example.beerapp.data.beer.BeersRepositoryProvider
+import com.example.beerapp.data.BeersRepository
+import com.example.beerapp.data.BeersRepositoryProvider
 import com.example.beerapp.ui.model.Beer
 import com.example.beerapp.ui.util.ModelTransformationUtil
 import kotlinx.coroutines.CoroutineDispatcher

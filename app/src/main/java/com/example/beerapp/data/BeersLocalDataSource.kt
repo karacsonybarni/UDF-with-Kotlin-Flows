@@ -1,7 +1,7 @@
-package com.example.beerapp.data.beer
+package com.example.beerapp.data
 
-import com.example.beerapp.data.beer.model.BeerDataModel
-import com.example.beerapp.data.beer.model.BeerDataModelCollection
+import com.example.beerapp.data.model.BeerDataModel
+import com.example.beerapp.data.model.BeerDataModelCollection
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

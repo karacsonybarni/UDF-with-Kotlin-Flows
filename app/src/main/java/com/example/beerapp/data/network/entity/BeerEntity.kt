@@ -1,4 +1,4 @@
-package com.example.beerapp.data.beer.network.entity
+package com.example.beerapp.data.network.entity
 
 import com.squareup.moshi.Json
 

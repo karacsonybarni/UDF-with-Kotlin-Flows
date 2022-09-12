@@ -1,7 +1,7 @@
-package com.example.beerapp.data.beer
+package com.example.beerapp.data
 
-import com.example.beerapp.data.beer.network.BeersApiService
-import com.example.beerapp.data.beer.network.RetrofitProvider
+import com.example.beerapp.data.network.BeersApiService
+import com.example.beerapp.data.network.RetrofitProvider
 
 object BeersRepositoryProvider {
 

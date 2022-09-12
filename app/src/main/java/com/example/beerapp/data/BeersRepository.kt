@@ -1,6 +1,6 @@
-package com.example.beerapp.data.beer
+package com.example.beerapp.data
 
-import com.example.beerapp.data.beer.model.BeerDataModelCollection
+import com.example.beerapp.data.model.BeerDataModelCollection
 
 class BeersRepository(
     private val remoteDataSource: BeersRemoteDataSource,
