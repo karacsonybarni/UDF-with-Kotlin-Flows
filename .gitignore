@@ -12,6 +12,8 @@
 /.idea/misc.xml
 /.idea/codeStyles/codeStyleConfig.xml
 /.idea/codeStyles/Project.xml
+/.idea/.name
+/.idea/kotlinc.xml
 .DS_Store
 /build
 /captures
