@@ -17,6 +17,7 @@ class BeersLocalDataSource(
 
     val beersFlow = beersFlow
         .onEach {
+            // This will be replaced with long term storage
             beers = it
         }
 

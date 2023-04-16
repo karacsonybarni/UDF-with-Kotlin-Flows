@@ -14,17 +14,20 @@ class BeersRemoteDataSource(
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-    private val _beerCollectionFlow = MutableStateFlow(emptyMap<Long, BeerDataModel>())
-    val beerCollectionFlow = _beerCollectionFlow.asStateFlow()
+    private val _beersFlow = MutableStateFlow(emptyMap<Long, BeerDataModel>())
+    val beersFlow = _beersFlow.asStateFlow()
 
     suspend fun fetch(collectionSize: Int) {
         withContext(coroutineDispatcher) {
+            if (_beersFlow.value.isNotEmpty()) {
+                _beersFlow.value = emptyMap()
+            }
             val beers = HashMap<Long, BeerDataModel>()
             for (i in 0 until collectionSize) {
                 val beerEntity = beersApiService.getRandomBeer()[0]
                 beers[beerEntity.id] = toBeerDataModel(beerEntity)
             }
-            _beerCollectionFlow.value = beers
+            _beersFlow.value = beers
         }
     }
 
