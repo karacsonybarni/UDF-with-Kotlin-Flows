@@ -22,12 +22,12 @@ class BeersRemoteDataSource(
             val beers = HashMap<Long, BeerDataModel>()
             for (i in 0 until collectionSize) {
                 val beerEntity = beersApiService.getRandomBeer()[0]
-                beers[beerEntity.id] = toBeer(beerEntity)
+                beers[beerEntity.id] = toBeerDataModel(beerEntity)
             }
             _beerCollectionFlow.value = beers
         }
     }
 
-    private fun toBeer(beerEntity: BeerEntity) =
+    private fun toBeerDataModel(beerEntity: BeerEntity) =
         BeerDataModel(beerEntity.id, beerEntity.name, beerEntity.tagline, beerEntity.imageUrl)
 }

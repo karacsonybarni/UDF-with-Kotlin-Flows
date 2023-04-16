@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beerapp.data.BeersRepository
 import com.example.beerapp.data.BeersRepositoryProvider
+import com.example.beerapp.data.model.BeerDataModel
 import com.example.beerapp.ui.model.Beer
 import com.example.beerapp.ui.util.ModelTransformationUtil
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,9 +21,9 @@ class PagerViewModel(
 
     // Needs to be a StateFlow<Map<Long, Beer>> because the PagerFragment uses the Long ids
     // of the Beers
-    val beersFlow: StateFlow<Map<Long, Beer>> = beersRepository.beerCollectionFlow
-        .map { beerCollection ->
-            beerCollection.mapValues { entry ->
+    val beersFlow: StateFlow<Map<Long, Beer>> = beersRepository.beersFlow
+        .map { beers: Map<Long, BeerDataModel> ->
+            beers.mapValues { entry ->
                 ModelTransformationUtil.toBeer(entry.value)
             }
         }

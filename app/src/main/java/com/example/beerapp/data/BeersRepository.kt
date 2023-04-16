@@ -11,7 +11,7 @@ class BeersRepository(
         private const val collectionSize = 10
     }
 
-    val beerCollectionFlow = localDataSource.beersFlow
+    val beersFlow = localDataSource.beersFlow
 
     suspend fun fetch() {
         localDataSource.reset()
@@ -23,6 +23,6 @@ class BeersRepository(
     }
 
     suspend fun getLikedBeers(): Map<Long, BeerDataModel> {
-        return localDataSource.getLikedBeerCollection()
+        return localDataSource.getLikedBeers()
     }
 }

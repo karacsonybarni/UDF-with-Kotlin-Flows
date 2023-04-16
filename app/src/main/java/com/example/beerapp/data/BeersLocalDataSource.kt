@@ -6,7 +6,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
-import java.util.*
 
 class BeersLocalDataSource(
     beersFlow: Flow<Map<Long, BeerDataModel>>,
@@ -14,7 +13,7 @@ class BeersLocalDataSource(
 ) {
 
     private lateinit var beers: Map<Long, BeerDataModel>
-    private var likedIds = TreeSet<Long>()
+    private var likedIds = LinkedHashSet<Long>()
 
     val beersFlow = beersFlow
         .onEach {
@@ -25,9 +24,9 @@ class BeersLocalDataSource(
         likedIds.add(id)
     }
 
-    suspend fun getLikedBeerCollection(): Map<Long, BeerDataModel> =
+    suspend fun getLikedBeers(): Map<Long, BeerDataModel> =
         withContext(coroutineDispatcher) {
-            val likedBeers = HashMap<Long, BeerDataModel>()
+            val likedBeers = LinkedHashMap<Long, BeerDataModel>()
             for (id in likedIds) {
                 beers[id]?.let { likedBeers.put(id, it) }
             }
@@ -35,6 +34,6 @@ class BeersLocalDataSource(
         }
 
     fun reset() {
-        likedIds = TreeSet<Long>()
+        likedIds = LinkedHashSet()
     }
 }
