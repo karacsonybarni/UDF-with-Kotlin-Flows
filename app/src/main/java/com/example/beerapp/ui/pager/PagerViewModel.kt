@@ -30,7 +30,7 @@ class PagerViewModel(
             }
         }
         .flowOn(coroutineDispatcher)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyMap())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
 
     private val _currentItemIndexFlow = MutableStateFlow<Int?>(null)
     val currentItemIndexFlow = _currentItemIndexFlow.asStateFlow()

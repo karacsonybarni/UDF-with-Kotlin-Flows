@@ -47,20 +47,28 @@ class PagerFragment : Fragment() {
         val lifecycleScope = viewLifecycleOwner.lifecycleScope
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                pagerViewModel.beersFlow.collect { beers ->
-                    adapter.updateValues(beers)
-                    pagerViewModel.currentItemIndexFlow.value?.let { currentItem ->
-                        pager.setCurrentItem(currentItem, false)
-                    }
+                launch {
+                    collectBeersFlow()
+                }
+                launch {
+                    collectCurrentItemIndexFlow()
                 }
             }
         }
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                pagerViewModel.currentItemIndexFlow.collect { currentItem ->
-                    currentItem?.let { pager.currentItem = it }
-                }
+    }
+
+    private suspend fun collectBeersFlow() {
+        pagerViewModel.beersFlow.collect { beers ->
+            adapter.updateValues(beers)
+            pagerViewModel.currentItemIndexFlow.value?.let { currentItem ->
+                pager.setCurrentItem(currentItem, false)
             }
+        }
+    }
+
+    private suspend fun collectCurrentItemIndexFlow() {
+        pagerViewModel.currentItemIndexFlow.collect { currentItemIndex ->
+            currentItemIndex?.let { pager.currentItem = it }
         }
     }
 }
