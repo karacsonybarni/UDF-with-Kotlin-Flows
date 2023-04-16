@@ -1,6 +1,6 @@
 package com.example.beerapp.data
 
-import com.example.beerapp.data.model.BeerDataModelCollection
+import com.example.beerapp.data.model.BeerDataModel
 
 class BeersRepository(
     private val remoteDataSource: BeersRemoteDataSource,
@@ -8,10 +8,10 @@ class BeersRepository(
 ) {
 
     companion object {
-        private const val collectionSize = 10
+        private const val collectionSize = 1
     }
 
-    val beerCollectionFlow = localDataSource.beerCollectionFlow
+    val beerCollectionFlow = localDataSource.beersFlow
 
     suspend fun fetch() {
         localDataSource.reset()
@@ -22,7 +22,7 @@ class BeersRepository(
         localDataSource.like(id)
     }
 
-    suspend fun getLikedBeerCollection(): BeerDataModelCollection {
+    suspend fun getLikedBeers(): Map<Long, BeerDataModel> {
         return localDataSource.getLikedBeerCollection()
     }
 }

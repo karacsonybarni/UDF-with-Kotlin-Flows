@@ -1,7 +1,6 @@
 package com.example.beerapp.data
 
 import com.example.beerapp.data.model.BeerDataModel
-import com.example.beerapp.data.model.BeerDataModelCollection
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -10,30 +9,29 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class BeersLocalDataSource(
-    beerCollectionFlow: Flow<BeerDataModelCollection>,
+    beersFlow: Flow<Map<Long, BeerDataModel>>,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-    private lateinit var beerCollection: BeerDataModelCollection
+    private lateinit var beers: Map<Long, BeerDataModel>
     private var likedIds = TreeSet<Long>()
 
-    val beerCollectionFlow = beerCollectionFlow
+    val beersFlow = beersFlow
         .onEach {
-            beerCollection = it
+            beers = it
         }
 
     fun like(id: Long) {
         likedIds.add(id)
     }
 
-    suspend fun getLikedBeerCollection(): BeerDataModelCollection =
+    suspend fun getLikedBeerCollection(): Map<Long, BeerDataModel> =
         withContext(coroutineDispatcher) {
-            val beers = beerCollection.beers
             val likedBeers = HashMap<Long, BeerDataModel>()
             for (id in likedIds) {
                 beers[id]?.let { likedBeers.put(id, it) }
             }
-            BeerDataModelCollection(likedBeers)
+            likedBeers
         }
 
     fun reset() {

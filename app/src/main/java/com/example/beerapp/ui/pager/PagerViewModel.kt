@@ -18,9 +18,11 @@ class PagerViewModel(
 
     private lateinit var beers: Map<Long, Beer>
 
-    val beersFlow = beersRepository.beerCollectionFlow
+    // Needs to be a StateFlow<Map<Long, Beer>> because the PagerFragment uses the Long ids
+    // of the Beers
+    val beersFlow: StateFlow<Map<Long, Beer>> = beersRepository.beerCollectionFlow
         .map { beerCollection ->
-            beerCollection.beers.mapValues { entry ->
+            beerCollection.mapValues { entry ->
                 ModelTransformationUtil.toBeer(entry.value)
             }
         }
@@ -28,6 +30,7 @@ class PagerViewModel(
             beers = map
         }
         .flowOn(coroutineDispatcher)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyMap())
 
     private val _currentItemIndexFlow = MutableStateFlow<Int?>(null)
     val currentItemIndexFlow = _currentItemIndexFlow.asStateFlow()

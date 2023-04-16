@@ -1,7 +1,6 @@
 package com.example.beerapp.data
 
 import com.example.beerapp.data.model.BeerDataModel
-import com.example.beerapp.data.model.BeerDataModelCollection
 import com.example.beerapp.data.network.BeersApiService
 import com.example.beerapp.data.network.entity.BeerEntity
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,7 +14,7 @@ class BeersRemoteDataSource(
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-    private val _beerCollectionFlow = MutableStateFlow(BeerDataModelCollection(emptyMap()))
+    private val _beerCollectionFlow = MutableStateFlow(emptyMap<Long, BeerDataModel>())
     val beerCollectionFlow = _beerCollectionFlow.asStateFlow()
 
     suspend fun fetch(collectionSize: Int) {
@@ -25,7 +24,7 @@ class BeersRemoteDataSource(
                 val beerEntity = beersApiService.getRandomBeer()[0]
                 beers[beerEntity.id] = toBeer(beerEntity)
             }
-            _beerCollectionFlow.value = BeerDataModelCollection(beers)
+            _beerCollectionFlow.value = beers
         }
     }
 

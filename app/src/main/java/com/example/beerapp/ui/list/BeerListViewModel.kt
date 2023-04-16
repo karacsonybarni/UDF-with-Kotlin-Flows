@@ -14,7 +14,7 @@ class BeerListViewModel(
 ) : ViewModel() {
 
     suspend fun getLikedBeers() = withContext(dispatcher) {
-        beersRepository.getLikedBeerCollection().beers.mapValues {
+        beersRepository.getLikedBeers().mapValues {
             ModelTransformationUtil.toBeer(it.value)
         }
     }
