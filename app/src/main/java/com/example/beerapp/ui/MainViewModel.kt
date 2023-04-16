@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class MainViewModel : ViewModel() {
 
-    private val _mainStateFlow = MutableStateFlow(MainState.BeersPager)
-    val mainStateFlow = _mainStateFlow.asStateFlow()
+    private val _appStateFlow = MutableStateFlow(AppState.BeersPager)
+    val mainStateFlow = _appStateFlow.asStateFlow()
 
     fun endPager() {
-        _mainStateFlow.value = MainState.LikedBeersList
+        _appStateFlow.value = AppState.LikedBeersList
     }
 }

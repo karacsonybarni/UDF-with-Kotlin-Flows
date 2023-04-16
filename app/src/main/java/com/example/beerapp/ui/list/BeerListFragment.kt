@@ -13,9 +13,9 @@ import com.example.beerapp.databinding.FragmentListBinding
 import kotlinx.coroutines.launch
 
 
-class ListFragment : Fragment() {
+class BeerListFragment : Fragment() {
 
-    private val viewModel: ListViewModel by viewModels()
+    private val viewModel: BeerListViewModel by viewModels()
 
     private lateinit var binding: FragmentListBinding
     private lateinit var adapter: BeersAdapter

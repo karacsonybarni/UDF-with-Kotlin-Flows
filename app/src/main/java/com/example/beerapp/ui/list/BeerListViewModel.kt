@@ -8,7 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ListViewModel(
+class BeerListViewModel(
     private val beersRepository: BeersRepository = BeersRepositoryProvider.get(),
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ViewModel() {

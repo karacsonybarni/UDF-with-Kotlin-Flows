@@ -1,6 +1,6 @@
 package com.example.beerapp.ui
 
-enum class MainState {
+enum class AppState {
     BeersPager,
     LikedBeersList
 }

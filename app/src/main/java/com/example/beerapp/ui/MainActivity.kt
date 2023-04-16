@@ -1,19 +1,19 @@
-package com.example.beerapp.ui.pager
+package com.example.beerapp.ui
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.beerapp.R
-import com.example.beerapp.ui.MainState
-import com.example.beerapp.ui.MainViewModel
-import com.example.beerapp.ui.list.ListActivity
+import com.example.beerapp.ui.list.BeerListFragment
+import com.example.beerapp.ui.pager.PagerFragment
 import kotlinx.coroutines.launch
 
-class PagerActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -27,10 +27,16 @@ class PagerActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.mainStateFlow.collect {
-                    if (MainState.LikedBeersList == it) {
-                        val startListActivityIntent =
-                            Intent(this@PagerActivity, ListActivity::class.java)
-                        startActivity(startListActivityIntent)
+                    if (AppState.BeersPager == it) {
+                        supportFragmentManager.commit {
+                            setReorderingAllowed(true)
+                            replace<PagerFragment>(R.id.container)
+                        }
+                    } else {
+                        supportFragmentManager.commit {
+                            setReorderingAllowed(true)
+                            replace<BeerListFragment>(R.id.container)
+                        }
                     }
                 }
             }
