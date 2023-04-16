@@ -3,8 +3,8 @@ package com.example.beerapp.ui
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -26,20 +26,31 @@ class MainActivity : AppCompatActivity() {
     private fun collectFlows() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.mainStateFlow.collect {
-                    if (AppState.BeersPager == it) {
-                        supportFragmentManager.commit {
-                            setReorderingAllowed(true)
-                            replace<PagerFragment>(R.id.container)
+                viewModel.appStateFlow.collect {
+                    when (it) {
+                        AppState.BeersPager -> {
+                            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+                            replaceContentWith(PagerFragment::class.java)
                         }
-                    } else {
-                        supportFragmentManager.commit {
-                            setReorderingAllowed(true)
-                            replace<BeerListFragment>(R.id.container)
+                        AppState.LikedBeersList -> {
+                            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                            replaceContentWith(BeerListFragment::class.java)
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun replaceContentWith(fragmentClass: Class<out Fragment>) {
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            replace(R.id.container, fragmentClass, null)
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        viewModel.navigateToBeerPager()
+        return true
     }
 }

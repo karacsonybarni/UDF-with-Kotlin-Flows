@@ -67,7 +67,7 @@ class BeerFragment : Fragment() {
         if (pagerViewModel.hasNextBeer) {
             pagerViewModel.pageToNextBeer()
         } else {
-            mainViewModel.endPager()
+            mainViewModel.navigateToLikedBeerList()
         }
     }
 
