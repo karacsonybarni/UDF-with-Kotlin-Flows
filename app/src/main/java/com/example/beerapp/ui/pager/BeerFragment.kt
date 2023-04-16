@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.example.beerapp.databinding.FragmentBeerBinding
 import com.example.beerapp.ui.MainViewModel
 import com.example.beerapp.ui.model.Beer
@@ -26,9 +25,9 @@ class BeerFragment : Fragment() {
             }
     }
 
-    private val pagerViewModel: PagerViewModel by viewModels({ requireParentFragment() })
+    private val pagerViewModel: PagerViewModel by activityViewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
-    private lateinit var beer: Beer
+    private var beer: Beer? = null
     private lateinit var binding: FragmentBeerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,11 +43,11 @@ class BeerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentBeerBinding.inflate(inflater, container, false)
-        bindData()
+        beer?.let { bindData(it) }
         return binding.root
     }
 
-    private fun bindData() {
+    private fun bindData(beer: Beer) {
         beer.imageUrl?.let { loadImage(it) }
         binding.name.text = beer.name
         binding.tagline.text = beer.tagline

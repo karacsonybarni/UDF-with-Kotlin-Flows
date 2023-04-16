@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class PagerFragment : Fragment() {
 
-    private val pagerViewModel: PagerViewModel by viewModels()
+    private val pagerViewModel: PagerViewModel by activityViewModels()
 
     private lateinit var binding: FragmentPagerBinding
     private lateinit var adapter: PagerAdapter
@@ -58,9 +58,7 @@ class PagerFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 pagerViewModel.currentItemIndexFlow.collect { currentItem ->
-                    if (currentItem != null && currentItem < adapter.itemCount) {
-                        pager.currentItem = currentItem
-                    }
+                    currentItem?.let { pager.currentItem = it }
                 }
             }
         }
