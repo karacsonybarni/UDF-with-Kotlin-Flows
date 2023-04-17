@@ -1,6 +1,7 @@
 package com.example.beerapp.data.source.local
 
 import com.example.beerapp.data.model.BeerDataModel
+import com.example.beerapp.data.source.local.db.BeerDao
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
@@ -8,6 +9,7 @@ import kotlinx.coroutines.withContext
 
 class BeersLocalDataSource(
     val beersFlow: StateFlow<Map<Long, BeerDataModel>>,
+    beerDao: BeerDao,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
