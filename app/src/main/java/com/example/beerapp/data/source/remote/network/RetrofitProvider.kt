@@ -1,4 +1,4 @@
-package com.example.beerapp.data.network
+package com.example.beerapp.data.source.remote.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

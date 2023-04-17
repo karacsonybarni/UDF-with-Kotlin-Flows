@@ -1,4 +1,4 @@
-package com.example.beerapp.data
+package com.example.beerapp.data.source.local
 
 import com.example.beerapp.data.model.BeerDataModel
 import kotlinx.coroutines.CoroutineDispatcher
