@@ -11,14 +11,7 @@ import com.example.beerapp.data.source.remote.network.RetrofitProvider
 
 object BeersRepositoryProvider {
 
-    var applicationContext: Context? = null
-
-    val beersRepository: BeersRepository by lazy {
-        val remoteDataSource = BeersRemoteDataSource(apiService)
-        val localDataSource = BeersLocalDataSource(remoteDataSource.beersFlow, dao)
-        applicationContext = null
-        BeersRepository(remoteDataSource, localDataSource)
-    }
+    private var applicationContext: Context? = null
 
     private val apiService: BeersApiService
         get() = RetrofitProvider.instance.create(BeersApiService::class.java)
@@ -31,4 +24,16 @@ object BeersRepositoryProvider {
             ).build()
             return database.beerDao()
         }
+
+    val beersRepository: BeersRepository by lazy {
+        assert(applicationContext != null)
+        val remoteDataSource = BeersRemoteDataSource(apiService)
+        val localDataSource = BeersLocalDataSource(remoteDataSource.beersFlow, dao)
+        applicationContext = null
+        BeersRepository(remoteDataSource, localDataSource)
+    }
+
+    fun init(applicationContext: Context) {
+        this.applicationContext = applicationContext
+    }
 }

@@ -21,7 +21,7 @@ class MainViewModel(
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 val application = checkNotNull(extras[APPLICATION_KEY])
-                BeersRepositoryProvider.applicationContext = application
+                BeersRepositoryProvider.init(application)
                 return MainViewModel(BeersRepositoryProvider.beersRepository) as T
             }
         }
