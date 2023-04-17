@@ -2,7 +2,7 @@ package com.example.beerapp.data.source.remote
 
 import com.example.beerapp.data.model.BeerDataModel
 import com.example.beerapp.data.source.remote.network.BeersApiService
-import com.example.beerapp.data.source.remote.network.entity.BeerEntity
+import com.example.beerapp.data.source.remote.network.BeerEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

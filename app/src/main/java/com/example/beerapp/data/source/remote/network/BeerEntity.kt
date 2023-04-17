@@ -1,4 +1,4 @@
-package com.example.beerapp.data.source.remote.network.entity
+package com.example.beerapp.data.source.remote.network
 
 import com.squareup.moshi.Json
 

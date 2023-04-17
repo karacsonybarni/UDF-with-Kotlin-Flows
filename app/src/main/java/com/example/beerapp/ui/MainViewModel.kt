@@ -8,8 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val beersRepository: BeersRepository = BeersRepositoryProvider.get()) :
-    ViewModel() {
+class MainViewModel(
+    private val beersRepository: BeersRepository = BeersRepositoryProvider.beersRepository
+) : ViewModel() {
 
     private val _appStateFlow = MutableStateFlow(AppState.BeersPager)
     val appStateFlow = _appStateFlow.asStateFlow()

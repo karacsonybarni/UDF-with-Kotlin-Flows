@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 
 class PagerViewModel(
-    private val beersRepository: BeersRepository = BeersRepositoryProvider.get(),
+    private val beersRepository: BeersRepository = BeersRepositoryProvider.beersRepository,
     coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ViewModel() {
 
