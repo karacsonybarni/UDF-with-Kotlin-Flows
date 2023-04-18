@@ -28,7 +28,7 @@ object BeersRepositoryProvider {
     val beersRepository: BeersRepository by lazy {
         assert(applicationContext != null)
         val remoteDataSource = BeersRemoteDataSource(apiService)
-        val localDataSource = BeersLocalDataSource(remoteDataSource.beersFlow, dao)
+        val localDataSource = BeersLocalDataSource(dao)
         applicationContext = null
         BeersRepository(remoteDataSource, localDataSource)
     }
