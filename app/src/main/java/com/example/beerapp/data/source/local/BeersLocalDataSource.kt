@@ -3,9 +3,15 @@ package com.example.beerapp.data.source.local
 import com.example.beerapp.data.model.BeerDataModel
 import com.example.beerapp.data.source.local.db.BeerDao
 import com.example.beerapp.data.source.local.db.BeerDbEntity
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 
-class BeersLocalDataSource(private val beerDao: BeerDao) {
+class BeersLocalDataSource(
+    private val beerDao: BeerDao,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
+) {
 
     private val _likedIds = LinkedHashSet<Long>()
     val likedIds: Collection<Long> = _likedIds
@@ -14,9 +20,15 @@ class BeersLocalDataSource(private val beerDao: BeerDao) {
         _likedIds.add(id)
     }
 
-    fun reset() {
+    suspend fun reset() {
         _likedIds.clear()
+        deleteAll()
     }
+
+    private suspend fun deleteAll() =
+        withContext(coroutineDispatcher) {
+            beerDao.deleteAll()
+        }
 
     fun store(beerDataModels: Map<Long, BeerDataModel>) {
         beerDao.insertAll(toBeerDbEntities(beerDataModels.values))

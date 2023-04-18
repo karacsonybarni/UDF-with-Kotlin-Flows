@@ -14,4 +14,7 @@ interface BeerDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(beerDbEntities: Collection<BeerDbEntity>)
+
+    @Query("DELETE FROM beer")
+    fun deleteAll()
 }
