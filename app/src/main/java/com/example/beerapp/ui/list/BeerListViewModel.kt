@@ -13,9 +13,10 @@ class BeerListViewModel(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ViewModel() {
 
-    suspend fun getLikedBeers() = withContext(dispatcher) {
-        beersRepository.getLikedBeers().mapValues {
-            ModelTransformationUtil.toBeer(it.value)
+    suspend fun getLikedBeers() =
+        withContext(dispatcher) {
+            beersRepository.getLikedBeers().map {
+                ModelTransformationUtil.toBeer(it)
+            }
         }
-    }
 }

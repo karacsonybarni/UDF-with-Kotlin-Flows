@@ -47,7 +47,7 @@ class BeerListFragment : Fragment() {
 
     private fun updateData() {
         viewLifecycleOwner.lifecycleScope.launch {
-            adapter.beerMap = viewModel.getLikedBeers()
+            adapter.beers = viewModel.getLikedBeers()
         }
     }
 }

@@ -4,17 +4,23 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
+import androidx.room.Update
 
 @Dao
 interface BeerDao {
 
     @Query("SELECT * FROM beer")
-    fun getAll(): Flow<List<BeerDbEntity>>
+    fun getAll(): List<BeerDbEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(beerDbEntities: Collection<BeerDbEntity>)
 
     @Query("DELETE FROM beer")
     fun deleteAll()
+
+    @Update
+    fun update(beer: BeerDbEntity)
+
+    @Query("SELECT * FROM beer WHERE isLiked = 1")
+    fun selectLiked(): List<BeerDbEntity>
 }

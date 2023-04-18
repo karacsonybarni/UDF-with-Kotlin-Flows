@@ -14,20 +14,27 @@ class BeersRemoteDataSource(
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-    private val _beersFlow = MutableStateFlow(emptyMap<Long, BeerDataModel>())
+    // Null means that the fetching failed
+    private val _beersFlow = MutableStateFlow<Map<Long, BeerDataModel>?>(emptyMap())
     val beersFlow = _beersFlow.asStateFlow()
 
     suspend fun fetch(collectionSize: Int) {
         withContext(coroutineDispatcher) {
-            if (_beersFlow.value.isNotEmpty()) {
+            val value = _beersFlow.value
+            if (value == null || value.isNotEmpty()) {
                 _beersFlow.value = emptyMap()
             }
+
             val beers = HashMap<Long, BeerDataModel>()
-            for (i in 0 until collectionSize) {
-                val beerEntity = beersApiService.getRandomBeer()[0]
-                beers[beerEntity.id] = toBeerDataModel(beerEntity)
+            try {
+                for (i in 0 until collectionSize) {
+                    val beerEntity = beersApiService.getRandomBeer()[0]
+                    beers[beerEntity.id] = toBeerDataModel(beerEntity)
+                }
+                _beersFlow.value = beers
+            } catch (e: Exception) {
+                _beersFlow.value = null
             }
-            _beersFlow.value = beers
         }
     }
 

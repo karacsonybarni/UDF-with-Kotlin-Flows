@@ -8,5 +8,6 @@ data class BeerDbEntity(
     @PrimaryKey val id: Long,
     val name: String,
     val tagline: String,
-    val imageUrl: String?
+    val imageUrl: String?,
+    val isLiked: Boolean
 )

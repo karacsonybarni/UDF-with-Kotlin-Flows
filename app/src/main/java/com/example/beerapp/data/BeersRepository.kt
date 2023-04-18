@@ -3,16 +3,12 @@ package com.example.beerapp.data
 import com.example.beerapp.data.model.BeerDataModel
 import com.example.beerapp.data.source.local.BeersLocalDataSource
 import com.example.beerapp.data.source.remote.BeersRemoteDataSource
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.withContext
 
 class BeersRepository(
     private val remoteDataSource: BeersRemoteDataSource,
-    private val localDataSource: BeersLocalDataSource,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val localDataSource: BeersLocalDataSource
 ) {
 
     companion object {
@@ -21,9 +17,10 @@ class BeersRepository(
 
     val beersFlow = remoteDataSource.beersFlow
         .onEach {
-            localDataSource.store(it)
-        }.map {
-            localDataSource.getAllBeers()
+            it?.let { localDataSource.store(it) }
+        }
+        .map {
+            it ?: localDataSource.getAllBeers()
         }
 
     suspend fun fetch() {
@@ -31,16 +28,7 @@ class BeersRepository(
         remoteDataSource.fetch(collectionSize)
     }
 
-    fun like(id: Long) {
-        localDataSource.like(id)
-    }
+    suspend fun like(beer: BeerDataModel) = localDataSource.like(beer)
 
-    suspend fun getLikedBeers(): Map<Long, BeerDataModel> =
-        withContext(coroutineDispatcher) {
-            val likedBeers = LinkedHashMap<Long, BeerDataModel>()
-            for (id in localDataSource.likedIds) {
-                remoteDataSource.beersFlow.value[id]?.let { likedBeers.put(id, it) }
-            }
-            likedBeers
-        }
+    suspend fun getLikedBeers() = localDataSource.getLikedBeers()
 }

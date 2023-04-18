@@ -5,7 +5,6 @@ import com.example.beerapp.data.source.local.db.BeerDao
 import com.example.beerapp.data.source.local.db.BeerDbEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class BeersLocalDataSource(
@@ -13,47 +12,53 @@ class BeersLocalDataSource(
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-    private val _likedIds = LinkedHashSet<Long>()
-    val likedIds: Collection<Long> = _likedIds
+    suspend fun like(beerDataModel: BeerDataModel) =
+        withContext(coroutineDispatcher) {
+            beerDao.update(toBeerDbEntity(beerDataModel, true))
+        }
 
-    fun like(id: Long) {
-        _likedIds.add(id)
-    }
+    suspend fun getLikedBeers(): List<BeerDataModel> =
+        withContext(coroutineDispatcher) {
+            beerDao.selectLiked().map {
+                toBeerDataModel(it)
+            }
+        }
 
-    suspend fun reset() {
-        _likedIds.clear()
-        deleteAll()
-    }
-
-    private suspend fun deleteAll() =
+    suspend fun reset() =
         withContext(coroutineDispatcher) {
             beerDao.deleteAll()
         }
 
-    fun store(beerDataModels: Map<Long, BeerDataModel>) {
-        beerDao.insertAll(toBeerDbEntities(beerDataModels.values))
-    }
+    suspend fun store(beerDataModels: Map<Long, BeerDataModel>) =
+        withContext(coroutineDispatcher) {
+            beerDao.insertAll(toBeerDbEntities(beerDataModels.values))
+        }
 
     private fun toBeerDbEntities(
         beerDataModels: Collection<BeerDataModel>
     ): Collection<BeerDbEntity> {
         return beerDataModels.map {
-            BeerDbEntity(
-                id = it.id,
-                name = it.name,
-                tagline = it.tagline,
-                imageUrl = it.imageUrl
-            )
+            toBeerDbEntity(it)
         }
     }
 
-    suspend fun getAllBeers(): Map<Long, BeerDataModel> {
-        val map = HashMap<Long, BeerDataModel>()
-        beerDao.getAll().first().forEach {
-            map[it.id] = toBeerDataModel(it)
+    private fun toBeerDbEntity(beerDataModels: BeerDataModel, isLiked: Boolean = false) =
+        BeerDbEntity(
+            id = beerDataModels.id,
+            name = beerDataModels.name,
+            tagline = beerDataModels.tagline,
+            imageUrl = beerDataModels.imageUrl,
+            isLiked = isLiked
+        )
+
+    suspend fun getAllBeers(): Map<Long, BeerDataModel> =
+        withContext(coroutineDispatcher) {
+            val map = HashMap<Long, BeerDataModel>()
+            beerDao.getAll().forEach {
+                map[it.id] = toBeerDataModel(it)
+            }
+            map
         }
-        return map
-    }
 
     private fun toBeerDataModel(beerDbEntity: BeerDbEntity): BeerDataModel {
         return BeerDataModel(
