@@ -2,7 +2,7 @@ package com.example.beerapp.data.source.remote
 
 import com.example.beerapp.data.model.BeerDataModel
 import com.example.beerapp.data.source.remote.network.BeersApiService
-import com.example.beerapp.data.source.remote.network.BeerEntity
+import com.example.beerapp.data.source.remote.network.BeerRemoteEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +31,11 @@ class BeersRemoteDataSource(
         }
     }
 
-    private fun toBeerDataModel(beerEntity: BeerEntity) =
-        BeerDataModel(beerEntity.id, beerEntity.name, beerEntity.tagline, beerEntity.imageUrl)
+    private fun toBeerDataModel(beerRemoteEntity: BeerRemoteEntity) =
+        BeerDataModel(
+            beerRemoteEntity.id,
+            beerRemoteEntity.name,
+            beerRemoteEntity.tagline,
+            beerRemoteEntity.imageUrl
+        )
 }

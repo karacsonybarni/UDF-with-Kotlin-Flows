@@ -2,6 +2,7 @@ package com.example.beerapp.data.source.local.db
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
@@ -9,8 +10,8 @@ import kotlinx.coroutines.flow.Flow
 interface BeerDao {
 
     @Query("SELECT * FROM beer")
-    fun getAll(): Flow<List<Beer>>
+    fun getAll(): Flow<List<BeerDbEntity>>
 
-    @Insert
-    fun insertAll(vararg beers: Beer)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertAll(beerDbEntities: Collection<BeerDbEntity>)
 }

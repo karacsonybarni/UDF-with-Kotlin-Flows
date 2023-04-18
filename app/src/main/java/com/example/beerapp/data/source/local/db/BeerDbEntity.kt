@@ -3,8 +3,8 @@ package com.example.beerapp.data.source.local.db
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
-data class Beer(
+@Entity(tableName = "beer")
+data class BeerDbEntity(
     @PrimaryKey val id: Long,
     val name: String,
     val tagline: String,
