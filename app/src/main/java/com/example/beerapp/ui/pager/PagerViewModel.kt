@@ -10,13 +10,10 @@ import com.example.beerapp.ui.util.ModelConversionUtil.toBeerDataModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -28,11 +25,6 @@ class PagerViewModel(
     val allBeersFlow: StateFlow<Map<Long, Beer>> = beersRepository.allBeersFlow
         .map { beerDataModelMap ->
             beerDataModelMap.mapValues { it.value.toBeer() }
-        }
-        .onEach {
-            if (it.isEmpty()) {
-                _currentItemIndexFlow.value = null
-            }
         }
         .flowOn(coroutineDispatcher)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
@@ -47,8 +39,8 @@ class PagerViewModel(
         .flowOn(coroutineDispatcher)
 
     // Null means that there are no beers so the index is invalid
-    private val _currentItemIndexFlow = MutableStateFlow<Int?>(null)
-    val currentItemIndexFlow = _currentItemIndexFlow.asStateFlow()
+    val currentItemIndexFlow: StateFlow<Int?> = beersRepository.currentItemIndexFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val nextItemIndex: Int get() = (currentItemIndexFlow.value ?: 0) + 1
 
@@ -62,8 +54,8 @@ class PagerViewModel(
             beersRepository.like(beer.toBeerDataModel())
         }
 
-    fun pageToNextBeer() {
-        _currentItemIndexFlow.value = nextItemIndex
+    fun pageToNextBeer() = viewModelScope.launch {
+        beersRepository.setCurrentItemIndex(nextItemIndex)
     }
 
     fun getBeer(id: Long): Beer? = allBeers[id]

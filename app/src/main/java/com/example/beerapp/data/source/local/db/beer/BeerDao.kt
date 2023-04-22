@@ -24,6 +24,6 @@ interface BeerDao {
     @Update
     fun update(beer: BeerDbEntity)
 
-    @Query("SELECT * FROM beer WHERE isLiked = 1")
+    @Query("SELECT * FROM beer WHERE isLiked = 1 ORDER BY time ASC")
     fun selectLiked(): List<BeerDbEntity>
 }
