@@ -13,7 +13,7 @@ interface BeerDao {
     fun getAll(): List<BeerDbEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(beerDbEntities: Collection<BeerDbEntity>)
+    fun insert(beerDbEntities: BeerDbEntity)
 
     @Query("DELETE FROM beer")
     fun deleteAll()

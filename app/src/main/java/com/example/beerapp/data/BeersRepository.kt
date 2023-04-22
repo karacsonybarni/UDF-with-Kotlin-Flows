@@ -3,7 +3,6 @@ package com.example.beerapp.data
 import com.example.beerapp.data.model.BeerDataModel
 import com.example.beerapp.data.source.local.BeersLocalDataSource
 import com.example.beerapp.data.source.remote.BeersRemoteDataSource
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
 class BeersRepository(
@@ -12,20 +11,17 @@ class BeersRepository(
 ) {
 
     companion object {
-        private const val collectionSize = 10
+        const val COLLECTION_SIZE = 10
     }
 
-    val beersFlow = remoteDataSource.beersFlow
+    val beerFlow = remoteDataSource.beerFlow
         .onEach {
             it?.let { localDataSource.store(it) }
-        }
-        .map {
-            it ?: localDataSource.getAllBeers()
         }
 
     suspend fun fetch() {
         localDataSource.reset()
-        remoteDataSource.fetch(collectionSize)
+        remoteDataSource.fetch(COLLECTION_SIZE)
     }
 
     suspend fun like(beer: BeerDataModel) = localDataSource.like(beer)

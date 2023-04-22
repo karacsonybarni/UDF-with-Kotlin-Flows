@@ -9,14 +9,12 @@ import com.example.beerapp.ui.model.Beer
 import com.example.beerapp.ui.util.ModelTransformationUtil
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class PagerViewModel(
@@ -24,28 +22,31 @@ class PagerViewModel(
     coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ViewModel() {
 
-    // Needs to be a StateFlow<Map<Long, Beer>> because the PagerFragment uses the Long ids
-    // of the Beers
-    val beersFlow: StateFlow<Map<Long, Beer>> = beersRepository.beersFlow
-        .map { beers: Map<Long, BeerDataModel> ->
-            beers.mapValues { entry ->
-                ModelTransformationUtil.toBeer(entry.value)
+    val beerMap = LinkedHashMap<Long, Beer>()
+
+    val beerFlow: Flow<Beer?> = beersRepository.beerFlow
+        .map {
+            it?.let {
+                ModelTransformationUtil.toBeer(it)
             }
         }
-        .onEach { beers ->
-            if (beers.isEmpty()) {
+        .onEach { beer ->
+            if (beer != null) {
+                beerMap[beer.id] = beer
+            } else {
                 _currentItemIndexFlow.value = null
+                beerMap.clear()
             }
         }
         .flowOn(coroutineDispatcher)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
 
+    // Null means that there are no beers so the index is invalid
     private val _currentItemIndexFlow = MutableStateFlow<Int?>(null)
     val currentItemIndexFlow = _currentItemIndexFlow.asStateFlow()
 
     private val nextItemIndex: Int get() = (currentItemIndexFlow.value ?: 0) + 1
 
-    val hasNextBeer: Boolean get() = nextItemIndex < beersFlow.value.size
+    val hasNextBeer: Boolean get() = nextItemIndex < beerMap.size
 
     fun like(beer: Beer) =
         viewModelScope.launch {
@@ -64,5 +65,5 @@ class PagerViewModel(
         _currentItemIndexFlow.value = nextItemIndex
     }
 
-    fun getBeer(id: Long): Beer? = beersFlow.value[id]
+    fun getBeer(id: Long): Beer? = beerMap[id]
 }

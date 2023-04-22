@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class PagerFragment : Fragment() {
 
-    private val pagerViewModel: PagerViewModel by activityViewModels()
+    val pagerViewModel: PagerViewModel by activityViewModels()
 
     private lateinit var binding: FragmentPagerBinding
     private lateinit var adapter: PagerAdapter
@@ -41,6 +41,14 @@ class PagerFragment : Fragment() {
         pager = binding.pager
         pager.adapter = adapter
         pager.isUserInputEnabled = false
+
+        initCurrentItemWithoutScroll()
+    }
+
+    private fun initCurrentItemWithoutScroll() {
+        pagerViewModel.currentItemIndexFlow.value?.let { currentItem ->
+            pager.setCurrentItem(currentItem, false)
+        }
     }
 
     private fun collectFlows() {
@@ -58,10 +66,11 @@ class PagerFragment : Fragment() {
     }
 
     private suspend fun collectBeersFlow() {
-        pagerViewModel.beersFlow.collect { beers ->
-            adapter.updateValues(beers)
-            pagerViewModel.currentItemIndexFlow.value?.let { currentItem ->
-                pager.setCurrentItem(currentItem, false)
+        pagerViewModel.beerFlow.collect { beer ->
+            if (beer != null) {
+                adapter.addBeer(beer)
+            } else {
+                adapter.clear()
             }
         }
     }

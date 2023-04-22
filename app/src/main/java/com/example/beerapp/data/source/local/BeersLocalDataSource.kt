@@ -29,18 +29,10 @@ class BeersLocalDataSource(
             beerDao.deleteAll()
         }
 
-    suspend fun store(beerDataModels: Map<Long, BeerDataModel>) =
+    suspend fun store(beerDataModel: BeerDataModel) =
         withContext(coroutineDispatcher) {
-            beerDao.insertAll(toBeerDbEntities(beerDataModels.values))
+            beerDao.insert(toBeerDbEntity(beerDataModel))
         }
-
-    private fun toBeerDbEntities(
-        beerDataModels: Collection<BeerDataModel>
-    ): Collection<BeerDbEntity> {
-        return beerDataModels.map {
-            toBeerDbEntity(it)
-        }
-    }
 
     private fun toBeerDbEntity(beerDataModels: BeerDataModel, isLiked: Boolean = false) =
         BeerDbEntity(

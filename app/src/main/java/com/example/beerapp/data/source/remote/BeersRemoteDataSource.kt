@@ -1,12 +1,13 @@
 package com.example.beerapp.data.source.remote
 
+import android.util.Log
 import com.example.beerapp.data.model.BeerDataModel
-import com.example.beerapp.data.source.remote.network.BeersApiService
 import com.example.beerapp.data.source.remote.network.BeerRemoteEntity
+import com.example.beerapp.data.source.remote.network.BeersApiService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.withContext
 
 class BeersRemoteDataSource(
@@ -14,27 +15,31 @@ class BeersRemoteDataSource(
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-    // Null means that the fetching failed
-    private val _beersFlow = MutableStateFlow<Map<Long, BeerDataModel>?>(emptyMap())
-    val beersFlow = _beersFlow.asStateFlow()
+    // Null means that fetching has started
+    private val _beerFlow = MutableSharedFlow<BeerDataModel?>()
+    val beerFlow = _beerFlow.asSharedFlow()
 
     suspend fun fetch(collectionSize: Int) {
         withContext(coroutineDispatcher) {
-            val value = _beersFlow.value
-            if (value == null || value.isNotEmpty()) {
-                _beersFlow.value = emptyMap()
-            }
+            _beerFlow.emit(null)
 
-            val beers = HashMap<Long, BeerDataModel>()
-            try {
-                for (i in 0 until collectionSize) {
-                    val beerEntity = beersApiService.getRandomBeer()[0]
-                    beers[beerEntity.id] = toBeerDataModel(beerEntity)
+            var i = 0
+            while (i < collectionSize) {
+                if (fetchABeer()) {
+                    i++
                 }
-                _beersFlow.value = beers
-            } catch (e: Exception) {
-                _beersFlow.value = null
             }
+        }
+    }
+
+    private suspend fun fetchABeer(): Boolean {
+        return try {
+            val beerEntity = beersApiService.getRandomBeer()[0]
+            _beerFlow.emit(toBeerDataModel(beerEntity))
+            true
+        } catch (e: Exception) {
+            Log.d(BeersRemoteDataSource::class.java.name, e.message, e)
+            false
         }
     }
 

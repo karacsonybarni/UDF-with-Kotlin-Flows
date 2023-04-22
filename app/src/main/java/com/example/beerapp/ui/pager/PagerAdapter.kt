@@ -4,14 +4,18 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.beerapp.ui.model.Beer
 
-class PagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+class PagerAdapter(fragment: PagerFragment) : FragmentStateAdapter(fragment) {
 
-    private var beerMap = emptyMap<Long, Beer>()
-    private var beerArray = emptyArray<Beer>()
+    private var beerMap = fragment.pagerViewModel.beerMap
+    private var beerArray = ArrayList<Beer>(beerMap.values)
 
-    fun updateValues(beers: Map<Long, Beer>) {
-        beerMap = beers
-        beerArray = beers.entries.map { it.value }.toTypedArray()
+    fun addBeer(beer: Beer) {
+        beerArray.add(beer)
+        notifyItemInserted(beerArray.size - 1)
+    }
+
+    fun clear() {
+        beerArray.clear()
         notifyDataSetChanged()
     }
 
