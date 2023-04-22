@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beerapp.data.BeersRepository
 import com.example.beerapp.data.BeersRepositoryProvider
-import com.example.beerapp.data.model.BeerDataModel
 import com.example.beerapp.ui.model.Beer
-import com.example.beerapp.ui.util.ModelTransformationUtil
+import com.example.beerapp.ui.util.ModelConversionUtil.toBeer
+import com.example.beerapp.ui.util.ModelConversionUtil.toBeerDataModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -26,9 +26,7 @@ class PagerViewModel(
 
     val beerFlow: Flow<Beer?> = beersRepository.beerFlow
         .map {
-            it?.let {
-                ModelTransformationUtil.toBeer(it)
-            }
+            it?.toBeer()
         }
         .onEach { beer ->
             if (beer != null) {
@@ -50,16 +48,8 @@ class PagerViewModel(
 
     fun like(beer: Beer) =
         viewModelScope.launch {
-            beersRepository.like(toBeerDataModel(beer))
+            beersRepository.like(beer.toBeerDataModel())
         }
-
-    private fun toBeerDataModel(beer: Beer) =
-        BeerDataModel(
-            beer.id,
-            beer.name,
-            beer.tagline,
-            beer.imageUrl
-        )
 
     fun pageToNextBeer() {
         _currentItemIndexFlow.value = nextItemIndex

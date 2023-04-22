@@ -35,7 +35,7 @@ class BeersRemoteDataSource(
     private suspend fun fetchABeer(): Boolean {
         return try {
             val beerEntity = beersApiService.getRandomBeer()[0]
-            _beerFlow.emit(toBeerDataModel(beerEntity))
+            _beerFlow.emit(beerEntity.toBeerDataModel())
             true
         } catch (e: Exception) {
             Log.d(BeersRemoteDataSource::class.java.name, e.message, e)
@@ -43,11 +43,11 @@ class BeersRemoteDataSource(
         }
     }
 
-    private fun toBeerDataModel(beerRemoteEntity: BeerRemoteEntity) =
+    private fun BeerRemoteEntity.toBeerDataModel() =
         BeerDataModel(
-            beerRemoteEntity.id,
-            beerRemoteEntity.name,
-            beerRemoteEntity.tagline,
-            beerRemoteEntity.imageUrl
+            id = id,
+            name = name,
+            tagline = tagline,
+            imageUrl = imageUrl
         )
 }

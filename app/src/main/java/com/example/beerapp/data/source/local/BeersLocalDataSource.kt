@@ -14,13 +14,14 @@ class BeersLocalDataSource(
 
     suspend fun like(beerDataModel: BeerDataModel) =
         withContext(coroutineDispatcher) {
-            beerDao.update(toBeerDbEntity(beerDataModel, true))
+            val likedBeer = beerDataModel.toBeerDbEntity(isLiked = true)
+            beerDao.update(likedBeer)
         }
 
     suspend fun getLikedBeers(): List<BeerDataModel> =
         withContext(coroutineDispatcher) {
             beerDao.selectLiked().map {
-                toBeerDataModel(it)
+                it.toBeerDataModel()
             }
         }
 
@@ -31,15 +32,15 @@ class BeersLocalDataSource(
 
     suspend fun store(beerDataModel: BeerDataModel) =
         withContext(coroutineDispatcher) {
-            beerDao.insert(toBeerDbEntity(beerDataModel))
+            beerDao.insert(beerDataModel.toBeerDbEntity())
         }
 
-    private fun toBeerDbEntity(beerDataModels: BeerDataModel, isLiked: Boolean = false) =
+    private fun BeerDataModel.toBeerDbEntity(isLiked: Boolean = false) =
         BeerDbEntity(
-            id = beerDataModels.id,
-            name = beerDataModels.name,
-            tagline = beerDataModels.tagline,
-            imageUrl = beerDataModels.imageUrl,
+            id = id,
+            name = name,
+            tagline = tagline,
+            imageUrl = imageUrl,
             isLiked = isLiked
         )
 
@@ -47,17 +48,16 @@ class BeersLocalDataSource(
         withContext(coroutineDispatcher) {
             val map = HashMap<Long, BeerDataModel>()
             beerDao.getAll().forEach {
-                map[it.id] = toBeerDataModel(it)
+                map[it.id] = it.toBeerDataModel()
             }
             map
         }
 
-    private fun toBeerDataModel(beerDbEntity: BeerDbEntity): BeerDataModel {
-        return BeerDataModel(
-            id = beerDbEntity.id,
-            name = beerDbEntity.name,
-            tagline = beerDbEntity.tagline,
-            imageUrl = beerDbEntity.imageUrl
+    private fun BeerDbEntity.toBeerDataModel() =
+        BeerDataModel(
+            id = id,
+            name = name,
+            tagline = tagline,
+            imageUrl = imageUrl
         )
-    }
 }
