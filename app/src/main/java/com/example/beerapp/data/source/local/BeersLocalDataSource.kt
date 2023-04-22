@@ -1,16 +1,24 @@
 package com.example.beerapp.data.source.local
 
 import com.example.beerapp.data.model.BeerDataModel
-import com.example.beerapp.data.source.local.db.BeerDao
-import com.example.beerapp.data.source.local.db.BeerDbEntity
+import com.example.beerapp.data.source.local.db.beer.BeerDao
+import com.example.beerapp.data.source.local.db.beer.BeerDbEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.util.Date
 
 class BeersLocalDataSource(
     private val beerDao: BeerDao,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
+
+    val allBeersFlow: Flow<Map<Long, BeerDataModel>> =
+        beerDao.getAll().map { dbEntityMap ->
+            dbEntityMap.mapValues { it.value.toBeerDataModel() }
+        }
 
     suspend fun like(beerDataModel: BeerDataModel) =
         withContext(coroutineDispatcher) {
@@ -41,17 +49,9 @@ class BeersLocalDataSource(
             name = name,
             tagline = tagline,
             imageUrl = imageUrl,
-            isLiked = isLiked
+            isLiked = isLiked,
+            time = Date()
         )
-
-    suspend fun getAllBeers(): Map<Long, BeerDataModel> =
-        withContext(coroutineDispatcher) {
-            val map = HashMap<Long, BeerDataModel>()
-            beerDao.getAll().forEach {
-                map[it.id] = it.toBeerDataModel()
-            }
-            map
-        }
 
     private fun BeerDbEntity.toBeerDataModel() =
         BeerDataModel(

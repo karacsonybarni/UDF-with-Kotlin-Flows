@@ -1,16 +1,19 @@
-package com.example.beerapp.data.source.local.db
+package com.example.beerapp.data.source.local.db.beer
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.MapInfo
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BeerDao {
 
-    @Query("SELECT * FROM beer")
-    fun getAll(): List<BeerDbEntity>
+    @MapInfo(keyColumn = "id")
+    @Query("SELECT * FROM beer ORDER BY time ASC")
+    fun getAll(): Flow<Map<Long, BeerDbEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(beerDbEntities: BeerDbEntity)

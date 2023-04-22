@@ -16,8 +16,10 @@ class BeersRepository(
 
     val beerFlow = remoteDataSource.beerFlow
         .onEach {
-            it?.let { localDataSource.store(it) }
+            localDataSource.store(it)
         }
+
+    val allBeersFlow = localDataSource.allBeersFlow
 
     suspend fun fetch() {
         localDataSource.reset()

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.beerapp.data.source.local.BeersLocalDataSource
 import com.example.beerapp.data.source.local.db.AppDatabase
-import com.example.beerapp.data.source.local.db.BeerDao
+import com.example.beerapp.data.source.local.db.beer.BeerDao
 import com.example.beerapp.data.source.remote.BeersRemoteDataSource
 import com.example.beerapp.data.source.remote.network.BeersApiService
 import com.example.beerapp.data.source.remote.network.RetrofitProvider

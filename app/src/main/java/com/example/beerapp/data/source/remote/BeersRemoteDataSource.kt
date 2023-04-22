@@ -15,17 +15,15 @@ class BeersRemoteDataSource(
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-    // Null means that fetching has started
-    private val _beerFlow = MutableSharedFlow<BeerDataModel?>()
+    private val _beerFlow = MutableSharedFlow<BeerDataModel>()
     val beerFlow = _beerFlow.asSharedFlow()
 
     suspend fun fetch(collectionSize: Int) {
         withContext(coroutineDispatcher) {
-            _beerFlow.emit(null)
-
             var i = 0
             while (i < collectionSize) {
-                if (fetchABeer()) {
+                val isFetchSuccessful = fetchABeer()
+                if (isFetchSuccessful) {
                     i++
                 }
             }
