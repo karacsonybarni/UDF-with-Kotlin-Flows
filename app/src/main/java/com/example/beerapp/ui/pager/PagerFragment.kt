@@ -1,5 +1,6 @@
 package com.example.beerapp.ui.pager
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +19,7 @@ class PagerFragment : Fragment() {
     private val viewModel: PagerViewModel by activityViewModels()
 
     private lateinit var binding: FragmentPagerBinding
-    private lateinit var adapter: PagerAdapter
+    private var adapter: PagerAdapter? = null
     private lateinit var pager: ViewPager2
 
     override fun onCreateView(
@@ -67,14 +68,19 @@ class PagerFragment : Fragment() {
 
     private suspend fun collectBeersFlow() {
         viewModel.beerFlow.collect { beer ->
-            adapter.addBeer(beer)
+            adapter?.addBeer(beer)
         }
     }
 
     private suspend fun collectUiStateFlow() {
         viewModel.uiStateFlow.collect { uiState ->
             uiState.currentItemIndex?.let { pager.currentItem = it }
-            adapter.beerMap = uiState.beerMap
+            adapter?.beerMap = uiState.beerMap
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        adapter?.beerMap = emptyMap()
     }
 }
