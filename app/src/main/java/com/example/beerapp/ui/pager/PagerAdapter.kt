@@ -5,20 +5,30 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.beerapp.ui.model.Beer
 
-class PagerAdapter(fragment: PagerFragment) : FragmentStateAdapter(fragment) {
+class PagerAdapter(
+    fragment: PagerFragment,
+    beers: Collection<Beer>
+) : FragmentStateAdapter(fragment) {
 
-    private var viewModel = fragment.viewModel
-    private var beerArray = ArrayList<Beer>(viewModel.beers)
+    private var beerArray = ArrayList<Beer>(beers)
+
+    var beerMap: Map<Long, Beer> = emptyMap()
+        set(value) {
+            field = value
+            if (value.isEmpty()) {
+                clear()
+            }
+        }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun clear() {
+        beerArray.clear()
+        notifyDataSetChanged()
+    }
 
     fun addBeer(beer: Beer) {
         beerArray.add(beer)
         notifyItemInserted(beerArray.size - 1)
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun clear() {
-        beerArray.clear()
-        notifyDataSetChanged()
     }
 
     override fun getItemCount() = beerArray.size
@@ -30,5 +40,5 @@ class PagerAdapter(fragment: PagerFragment) : FragmentStateAdapter(fragment) {
 
     override fun getItemId(position: Int) = beerArray[position].id
 
-    override fun containsItem(itemId: Long) = viewModel.hasBeer(itemId)
+    override fun containsItem(itemId: Long) = beerMap.containsKey(itemId)
 }

@@ -34,7 +34,7 @@ class BeerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             val id = it.getLong(ARG_ID)
-            beer = pagerViewModel.getBeer(id)
+            beer = pagerViewModel.uiState.beerMap[id]
         }
     }
 
@@ -63,7 +63,7 @@ class BeerFragment : Fragment() {
     }
 
     private fun pageToNextBeerOrEndPager() {
-        if (pagerViewModel.hasNextBeer) {
+        if (pagerViewModel.uiState.hasNextItem) {
             pagerViewModel.pageToNextBeer()
         } else {
             mainViewModel.navigateToLikedBeerList()

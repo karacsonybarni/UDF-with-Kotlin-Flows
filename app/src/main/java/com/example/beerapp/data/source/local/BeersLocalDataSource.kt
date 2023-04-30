@@ -4,26 +4,37 @@ import com.example.beerapp.data.model.BeerDataModel
 import com.example.beerapp.data.source.local.db.beer.BeerDao
 import com.example.beerapp.data.source.local.db.beer.BeerDbEntity
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import java.util.Date
 
 class BeersLocalDataSource(
     private val beerDao: BeerDao,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    coroutineScope: CoroutineScope = CoroutineScope(Job() + coroutineDispatcher)
 ) {
 
-    val allBeersFlow: Flow<Map<Long, BeerDataModel>> =
-        beerDao.getAll().map { dbEntityMap ->
+    private val beerDbEntitiesFlow: StateFlow<Map<Long, BeerDbEntity>> = beerDao.getAll()
+        .stateIn(coroutineScope, SharingStarted.WhileSubscribed(5000), emptyMap())
+
+    val allBeersFlow: Flow<Map<Long, BeerDataModel>> = beerDbEntitiesFlow
+        .map { dbEntityMap ->
             dbEntityMap.mapValues { it.value.toBeerDataModel() }
         }
 
-    suspend fun like(beerDataModel: BeerDataModel) =
+    suspend fun like(id: Long) =
         withContext(coroutineDispatcher) {
-            val likedBeer = beerDataModel.toBeerDbEntity(isLiked = true)
-            beerDao.update(likedBeer)
+            val likedBeer = beerDbEntitiesFlow.value[id]?.like()
+            likedBeer?.let {
+                beerDao.update(it)
+            }
         }
 
     suspend fun getLikedBeers(): List<BeerDataModel> =
@@ -49,8 +60,8 @@ class BeersLocalDataSource(
             name = name,
             tagline = tagline,
             imageUrl = imageUrl,
-            isLiked = isLiked,
-            time = Date()
+            time = Date(),
+            isLiked = isLiked
         )
 
     private fun BeerDbEntity.toBeerDataModel() =
@@ -59,5 +70,15 @@ class BeersLocalDataSource(
             name = name,
             tagline = tagline,
             imageUrl = imageUrl
+        )
+
+    private fun BeerDbEntity.like() =
+        BeerDbEntity(
+            id = id,
+            name = name,
+            tagline = tagline,
+            imageUrl = imageUrl,
+            time = time,
+            isLiked = true
         )
 }

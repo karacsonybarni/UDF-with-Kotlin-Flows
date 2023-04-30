@@ -5,7 +5,6 @@ import com.example.beerapp.data.source.local.db.currentitemindex.CurrentItemDbEn
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
@@ -19,12 +18,9 @@ class CurrentItemLocalDataSource(
         it?.index
     }
 
-    suspend fun setCurrentItemIndex(index: Int?) = withContext(coroutineDispatcher) {
-        val currentItem = CurrentItemDbEntity(index = index)
-        currentItemDao.update(currentItem)
-    }
-
-    suspend fun isCurrentItemIndexInvalid(): Boolean = withContext(coroutineDispatcher) {
-        currentItemIndexFlow.first() == null
-    }
+    suspend fun setCurrentItemIndex(index: Int?) =
+        withContext(coroutineDispatcher) {
+            val currentItem = CurrentItemDbEntity(index = index)
+            currentItemDao.update(currentItem)
+        }
 }

@@ -1,6 +1,5 @@
 package com.example.beerapp.data
 
-import com.example.beerapp.data.model.BeerDataModel
 import com.example.beerapp.data.source.local.BeersLocalDataSource
 import com.example.beerapp.data.source.local.CurrentItemLocalDataSource
 import com.example.beerapp.data.source.remote.BeersRemoteDataSource
@@ -35,15 +34,10 @@ class BeersRepository(
         beersRemoteDataSource.fetch(COLLECTION_SIZE)
     }
 
-    suspend fun like(beer: BeerDataModel) = beersLocalDataSource.like(beer)
+    suspend fun like(id: Long) = beersLocalDataSource.like(id)
 
     suspend fun getLikedBeers() = beersLocalDataSource.getLikedBeers()
 
     suspend fun setCurrentItemIndex(index: Int?) =
         currentItemLocalDataSource.setCurrentItemIndex(index)
-
-    suspend fun isCurrentItemIndexInvalid(): Boolean =
-        currentItemLocalDataSource.isCurrentItemIndexInvalid()
-
-    suspend fun invalidateCurrentItemIndex() = setCurrentItemIndex(null)
 }

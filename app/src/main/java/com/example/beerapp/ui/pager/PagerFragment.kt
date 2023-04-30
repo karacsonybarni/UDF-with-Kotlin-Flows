@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class PagerFragment : Fragment() {
 
-    val viewModel: PagerViewModel by activityViewModels()
+    private val viewModel: PagerViewModel by activityViewModels()
 
     private lateinit var binding: FragmentPagerBinding
     private lateinit var adapter: PagerAdapter
@@ -36,7 +36,7 @@ class PagerFragment : Fragment() {
     }
 
     private fun setupPager() {
-        adapter = PagerAdapter(this)
+        adapter = PagerAdapter(this, viewModel.uiState.beerMap.values)
 
         pager = binding.pager
         pager.adapter = adapter
@@ -46,7 +46,7 @@ class PagerFragment : Fragment() {
     }
 
     private fun initCurrentItemWithoutScroll() {
-        viewModel.currentItemIndexFlow.value?.let { currentItem ->
+        viewModel.uiStateFlow.value.currentItemIndex?.let { currentItem ->
             pager.setCurrentItem(currentItem, false)
         }
     }
@@ -56,13 +56,10 @@ class PagerFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
+                    collectUiStateFlow()
+                }
+                launch {
                     collectBeersFlow()
-                }
-                launch {
-                    collectCurrentItemIndexFlow()
-                }
-                launch {
-                    collectAllBeersFlow()
                 }
             }
         }
@@ -74,17 +71,10 @@ class PagerFragment : Fragment() {
         }
     }
 
-    private suspend fun collectCurrentItemIndexFlow() {
-        viewModel.currentItemIndexFlow.collect { currentItemIndex ->
-            currentItemIndex?.let { pager.currentItem = it }
-        }
-    }
-
-    private suspend fun collectAllBeersFlow() {
-        viewModel.allBeersFlow.collect {
-            if (it.isEmpty()) {
-                adapter.clear()
-            }
+    private suspend fun collectUiStateFlow() {
+        viewModel.uiStateFlow.collect { uiState ->
+            uiState.currentItemIndex?.let { pager.currentItem = it }
+            adapter.beerMap = uiState.beerMap
         }
     }
 }

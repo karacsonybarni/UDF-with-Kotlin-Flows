@@ -12,12 +12,4 @@ object ModelConversionUtil {
             tagline = tagline,
             imageUrl = imageUrl
         )
-
-    fun Beer.toBeerDataModel() =
-        BeerDataModel(
-            id = id,
-            name = name,
-            tagline = tagline,
-            imageUrl = imageUrl
-        )
 }
