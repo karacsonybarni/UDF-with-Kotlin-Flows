@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import com.example.beerapp.databinding.FragmentPagerBinding
+import com.example.beerapp.ui.model.Beer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -23,6 +24,9 @@ class PagerFragment : Fragment() {
     private lateinit var binding: FragmentPagerBinding
     private var adapter: PagerAdapter? = null
     private lateinit var pager: ViewPager2
+
+    val beerMap: Map<Long, Beer>
+        get() = viewModel.uiState.beerMap
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +43,7 @@ class PagerFragment : Fragment() {
     }
 
     private fun setupPager() {
-        adapter = PagerAdapter(this, viewModel.uiState.beerMap.values)
+        adapter = PagerAdapter(this)
 
         pager = binding.pager
         pager.adapter = adapter
@@ -49,7 +53,7 @@ class PagerFragment : Fragment() {
     }
 
     private fun initCurrentItemWithoutScroll() {
-        viewModel.uiStateFlow.value.currentItemIndex?.let { currentItem ->
+        viewModel.uiState.currentItemIndex?.let { currentItem ->
             pager.setCurrentItem(currentItem, false)
         }
     }
@@ -77,12 +81,14 @@ class PagerFragment : Fragment() {
     private suspend fun collectUiStateFlow() {
         viewModel.uiStateFlow.collect { uiState ->
             uiState.currentItemIndex?.let { pager.currentItem = it }
-            adapter?.beerMap = uiState.beerMap
+            if (uiState.beerMap.isEmpty()) {
+                adapter?.reset()
+            }
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        adapter?.beerMap = emptyMap()
+        adapter?.reset()
     }
 }
