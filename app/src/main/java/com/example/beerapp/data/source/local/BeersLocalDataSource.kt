@@ -3,22 +3,24 @@ package com.example.beerapp.data.source.local
 import com.example.beerapp.data.model.BeerDataModel
 import com.example.beerapp.data.source.local.db.beer.BeerDao
 import com.example.beerapp.data.source.local.db.beer.BeerDbEntity
+import com.example.beerapp.di.IoDispatcher
+import com.example.beerapp.di.IoScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import java.util.Date
+import javax.inject.Inject
 
-class BeersLocalDataSource(
+class BeersLocalDataSource @Inject constructor(
     private val beerDao: BeerDao,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
-    coroutineScope: CoroutineScope = CoroutineScope(Job() + coroutineDispatcher)
+    @IoDispatcher private val coroutineDispatcher: CoroutineDispatcher,
+    @IoScope coroutineScope: CoroutineScope
 ) {
 
     private val beerDbEntitiesFlow: StateFlow<Map<Long, BeerDbEntity>> = beerDao.getAll()
@@ -28,6 +30,7 @@ class BeersLocalDataSource(
         .map { dbEntityMap ->
             dbEntityMap.mapValues { it.value.toBeerDataModel() }
         }
+        .flowOn(coroutineDispatcher)
 
     suspend fun like(id: Long) =
         withContext(coroutineDispatcher) {

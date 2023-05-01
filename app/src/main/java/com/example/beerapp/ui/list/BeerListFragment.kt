@@ -10,9 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.beerapp.databinding.FragmentListBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class BeerListFragment : Fragment() {
 
     private val viewModel: BeerListViewModel by viewModels()

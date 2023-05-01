@@ -12,8 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import com.example.beerapp.databinding.FragmentPagerBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class PagerFragment : Fragment() {
 
     private val viewModel: PagerViewModel by activityViewModels()

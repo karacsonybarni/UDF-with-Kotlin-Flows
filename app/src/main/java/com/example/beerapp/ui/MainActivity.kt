@@ -11,11 +11,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.beerapp.R
 import com.example.beerapp.ui.list.BeerListFragment
 import com.example.beerapp.ui.pager.PagerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by viewModels { MainViewModel.Factory }
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

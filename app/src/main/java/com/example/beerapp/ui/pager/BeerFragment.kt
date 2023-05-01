@@ -10,9 +10,11 @@ import com.example.beerapp.databinding.FragmentBeerBinding
 import com.example.beerapp.ui.MainViewModel
 import com.example.beerapp.ui.model.Beer
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val ARG_ID = "position"
 
+@AndroidEntryPoint
 class BeerFragment : Fragment() {
 
     companion object {

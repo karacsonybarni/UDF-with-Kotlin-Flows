@@ -4,8 +4,11 @@ import com.example.beerapp.data.source.local.BeersLocalDataSource
 import com.example.beerapp.data.source.local.CurrentItemLocalDataSource
 import com.example.beerapp.data.source.remote.BeersRemoteDataSource
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class BeersRepository(
+@Singleton
+class BeersRepository @Inject constructor(
     private val beersRemoteDataSource: BeersRemoteDataSource,
     private val beersLocalDataSource: BeersLocalDataSource,
     private val currentItemLocalDataSource: CurrentItemLocalDataSource

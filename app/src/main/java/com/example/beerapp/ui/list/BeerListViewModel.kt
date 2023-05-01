@@ -2,15 +2,17 @@ package com.example.beerapp.ui.list
 
 import androidx.lifecycle.ViewModel
 import com.example.beerapp.data.BeersRepository
-import com.example.beerapp.data.BeersRepositoryProvider
+import com.example.beerapp.di.DefaultDispatcher
 import com.example.beerapp.ui.util.ModelConversionUtil.toBeer
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class BeerListViewModel(
-    private val beersRepository: BeersRepository = BeersRepositoryProvider.beersRepository,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
+@HiltViewModel
+class BeerListViewModel @Inject constructor(
+    private val beersRepository: BeersRepository,
+    @DefaultDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     suspend fun getLikedBeers() =
