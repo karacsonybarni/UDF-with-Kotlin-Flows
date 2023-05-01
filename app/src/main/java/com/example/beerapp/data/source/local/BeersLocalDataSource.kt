@@ -34,7 +34,7 @@ class BeersLocalDataSource @Inject constructor(
 
     suspend fun like(id: Long) =
         withContext(coroutineDispatcher) {
-            val likedBeer = beerDbEntitiesFlow.value[id]?.like()
+            val likedBeer = beerDbEntitiesFlow.value[id]?.copy(isLiked = true)
             likedBeer?.let {
                 beerDao.update(it)
             }
@@ -57,14 +57,14 @@ class BeersLocalDataSource @Inject constructor(
             beerDao.insert(beerDataModel.toBeerDbEntity())
         }
 
-    private fun BeerDataModel.toBeerDbEntity(isLiked: Boolean = false) =
+    private fun BeerDataModel.toBeerDbEntity() =
         BeerDbEntity(
             id = id,
             name = name,
             tagline = tagline,
             imageUrl = imageUrl,
             time = Date(),
-            isLiked = isLiked
+            isLiked = false
         )
 
     private fun BeerDbEntity.toBeerDataModel() =
@@ -73,15 +73,5 @@ class BeersLocalDataSource @Inject constructor(
             name = name,
             tagline = tagline,
             imageUrl = imageUrl
-        )
-
-    private fun BeerDbEntity.like() =
-        BeerDbEntity(
-            id = id,
-            name = name,
-            tagline = tagline,
-            imageUrl = imageUrl,
-            time = time,
-            isLiked = true
         )
 }
