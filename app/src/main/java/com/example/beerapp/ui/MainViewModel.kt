@@ -1,5 +1,6 @@
 package com.example.beerapp.ui
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.beerapp.data.BeersRepository
@@ -18,11 +19,19 @@ class MainViewModel @Inject constructor(
     @DefaultDispatcher private val coroutineDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
+    private var initializeCalled = false
+
     private val _appStateFlow = MutableStateFlow(AppState.BeersPager)
     val appStateFlow = _appStateFlow.asStateFlow()
 
     init {
         _appStateFlow.value = AppState.BeersPager
+    }
+
+    @MainThread
+    fun initialize() {
+        if(initializeCalled) return
+        initializeCalled = true
 
         viewModelScope.launch(coroutineDispatcher) {
             if (!hasSavedState()) {
