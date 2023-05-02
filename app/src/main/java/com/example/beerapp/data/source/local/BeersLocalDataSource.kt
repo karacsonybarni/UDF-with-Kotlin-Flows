@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -23,10 +24,11 @@ class BeersLocalDataSource @Inject constructor(
     @IoScope coroutineScope: CoroutineScope
 ) {
 
-    private val beerDbEntitiesFlow: StateFlow<Map<Long, BeerDbEntity>> = beerDao.getAll()
-        .stateIn(coroutineScope, SharingStarted.WhileSubscribed(5000), emptyMap())
+    private val beerDbEntitiesFlow: StateFlow<Map<Long, BeerDbEntity>?> = beerDao.getAll()
+        .stateIn(coroutineScope, SharingStarted.WhileSubscribed(5000), null)
 
     val allBeersFlow: Flow<Map<Long, BeerDataModel>> = beerDbEntitiesFlow
+        .filterNotNull()
         .map { dbEntityMap ->
             dbEntityMap.mapValues { it.value.toBeerDataModel() }
         }
@@ -34,7 +36,7 @@ class BeersLocalDataSource @Inject constructor(
 
     suspend fun like(id: Long) =
         withContext(coroutineDispatcher) {
-            val likedBeer = beerDbEntitiesFlow.value[id]?.copy(isLiked = true)
+            val likedBeer = beerDbEntitiesFlow.value?.get(id)?.copy(isLiked = true)
             likedBeer?.let {
                 beerDao.update(it)
             }

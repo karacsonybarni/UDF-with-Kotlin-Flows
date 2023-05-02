@@ -34,7 +34,7 @@ class PagerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupPager()
-        collectFlows()
+        collectFlowInLifecycleScope()
     }
 
     private fun setupPager() {
@@ -53,24 +53,17 @@ class PagerFragment : Fragment() {
         }
     }
 
-    private fun collectFlows() {
-        val lifecycleScope = viewLifecycleOwner.lifecycleScope
-        lifecycleScope.launch {
+    private fun collectFlowInLifecycleScope() =
+        viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 collectUiStateFlow()
             }
         }
-    }
 
     private suspend fun collectUiStateFlow() {
         viewModel.uiStateFlow.collect { uiState ->
-            uiState.currentItemIndex?.let { pager.currentItem = it }
             adapter.beerMap = uiState.beerMap
+            uiState.currentItemIndex?.let { pager.currentItem = it }
         }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        adapter.beerMap = emptyMap()
     }
 }

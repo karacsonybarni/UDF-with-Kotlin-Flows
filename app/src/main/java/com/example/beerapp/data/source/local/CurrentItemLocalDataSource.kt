@@ -15,9 +15,10 @@ class CurrentItemLocalDataSource @Inject constructor(
 ) {
 
     // Null means that there are no beers so the index is invalid
-    val currentItemIndexFlow: Flow<Int?> = currentItemDao.selectIndex().map {
-        it?.index
-    }
+    val currentItemIndexFlow: Flow<Int?> = currentItemDao.selectIndex()
+        .map {
+            it?.index
+        }
 
     suspend fun setCurrentItemIndex(index: Int?) =
         withContext(coroutineDispatcher) {
