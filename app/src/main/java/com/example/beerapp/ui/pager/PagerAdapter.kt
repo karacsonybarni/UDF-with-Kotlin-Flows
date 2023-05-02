@@ -10,23 +10,22 @@ class PagerAdapter(
     beerMap: Map<Long, Beer>
 ) : FragmentStateAdapter(fragment) {
 
-    private val beerIdSet: HashSet<Long> = HashSet(beerMap.keys)
-    private var beerArray = ArrayList<Beer>(beerMap.values)
+    private var beerArray = ArrayList(beerMap.values)
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun reset() {
-        if (beerArray.isNotEmpty()) {
-            beerIdSet.clear()
-            beerArray.clear()
-            notifyDataSetChanged()
+    var beerMap = beerMap
+        @SuppressLint("NotifyDataSetChanged")
+        set(value) {
+            val sizeDiff = value.size - field.size
+
+            field = value
+            beerArray = ArrayList<Beer>(value.values)
+
+            if (value.isNotEmpty()) {
+                notifyItemRangeInserted(value.size - sizeDiff, sizeDiff)
+            } else {
+                notifyDataSetChanged()
+            }
         }
-    }
-
-    fun addBeer(beer: Beer) {
-        beerIdSet.add(beer.id)
-        beerArray.add(beer)
-        notifyItemInserted(beerArray.size - 1)
-    }
 
     override fun getItemCount() = beerArray.size
 
@@ -37,5 +36,5 @@ class PagerAdapter(
 
     override fun getItemId(position: Int) = beerArray[position].id
 
-    override fun containsItem(itemId: Long) = beerIdSet.contains(itemId)
+    override fun containsItem(itemId: Long) = beerMap.containsKey(itemId)
 }

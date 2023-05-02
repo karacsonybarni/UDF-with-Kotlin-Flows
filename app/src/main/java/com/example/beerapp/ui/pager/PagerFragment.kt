@@ -20,7 +20,7 @@ class PagerFragment : Fragment() {
     private val viewModel: PagerViewModel by activityViewModels()
 
     private lateinit var binding: FragmentPagerBinding
-    private var adapter: PagerAdapter? = null
+    private lateinit var adapter: PagerAdapter
     private lateinit var pager: ViewPager2
 
     override fun onCreateView(
@@ -57,33 +57,20 @@ class PagerFragment : Fragment() {
         val lifecycleScope = viewLifecycleOwner.lifecycleScope
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    collectUiStateFlow()
-                }
-                launch {
-                    collectBeersFlow()
-                }
+                collectUiStateFlow()
             }
-        }
-    }
-
-    private suspend fun collectBeersFlow() {
-        viewModel.beerFlow.collect { beer ->
-            adapter?.addBeer(beer)
         }
     }
 
     private suspend fun collectUiStateFlow() {
         viewModel.uiStateFlow.collect { uiState ->
             uiState.currentItemIndex?.let { pager.currentItem = it }
-            if (uiState.beerMap.isEmpty()) {
-                adapter?.reset()
-            }
+            adapter.beerMap = uiState.beerMap
         }
     }
 
     override fun onDetach() {
         super.onDetach()
-        adapter?.reset()
+        adapter.beerMap = emptyMap()
     }
 }
