@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import com.example.beerapp.databinding.FragmentPagerBinding
-import com.example.beerapp.ui.model.Beer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -23,9 +22,6 @@ class PagerFragment : Fragment() {
     private lateinit var binding: FragmentPagerBinding
     private var adapter: PagerAdapter? = null
     private lateinit var pager: ViewPager2
-
-    val beerMap: Map<Long, Beer>
-        get() = viewModel.uiState.beerMap
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +38,7 @@ class PagerFragment : Fragment() {
     }
 
     private fun setupPager() {
-        adapter = PagerAdapter(this)
+        adapter = PagerAdapter(this, viewModel.uiState.beerMap)
 
         pager = binding.pager
         pager.adapter = adapter

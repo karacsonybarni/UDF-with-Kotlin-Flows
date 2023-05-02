@@ -5,22 +5,25 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.beerapp.ui.model.Beer
 
-class PagerAdapter(private val fragment: PagerFragment) : FragmentStateAdapter(fragment) {
+class PagerAdapter(
+    fragment: PagerFragment,
+    beerMap: Map<Long, Beer>
+) : FragmentStateAdapter(fragment) {
 
-    private val beerMap: Map<Long, Beer>
-        get() = fragment.beerMap
-
+    private val beerIdSet: HashSet<Long> = HashSet(beerMap.keys)
     private var beerArray = ArrayList<Beer>(beerMap.values)
 
     @SuppressLint("NotifyDataSetChanged")
     fun reset() {
         if (beerArray.isNotEmpty()) {
+            beerIdSet.clear()
             beerArray.clear()
             notifyDataSetChanged()
         }
     }
 
     fun addBeer(beer: Beer) {
+        beerIdSet.add(beer.id)
         beerArray.add(beer)
         notifyItemInserted(beerArray.size - 1)
     }
@@ -34,5 +37,5 @@ class PagerAdapter(private val fragment: PagerFragment) : FragmentStateAdapter(f
 
     override fun getItemId(position: Int) = beerArray[position].id
 
-    override fun containsItem(itemId: Long) = beerMap.containsKey(itemId)
+    override fun containsItem(itemId: Long) = beerIdSet.contains(itemId)
 }
