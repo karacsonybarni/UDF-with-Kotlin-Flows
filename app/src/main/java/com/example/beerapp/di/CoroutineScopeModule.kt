@@ -6,7 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import javax.inject.Qualifier
 
 @Module
@@ -15,7 +15,7 @@ object CoroutineScopeModule {
 
     @IoScope
     @Provides
-    fun provideIoScope(): CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
+    fun provideIoScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 }
 
 @Retention(AnnotationRetention.BINARY)
