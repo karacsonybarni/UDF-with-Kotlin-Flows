@@ -1,4 +1,4 @@
-package com.example.beerapp.ui
+package com.example.beerapp.ui.main
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
@@ -21,14 +21,13 @@ class MainViewModel @Inject constructor(
 
     private var initializeCalled = false
 
-    private val _appStateFlow = MutableStateFlow(AppState.BeersPager)
-    val appStateFlow = _appStateFlow.asStateFlow()
+    private val beersPagerUiState =
+        MainUiState(MainUiState.ActiveFragment.BeersPager, false)
+    private val likedBeersListUiState =
+        MainUiState(MainUiState.ActiveFragment.LikedBeersList, true)
 
-    var isDisplayHomeAsUpEnabled = false
-
-    init {
-        _appStateFlow.value = AppState.BeersPager
-    }
+    private val _uiStateFlow = MutableStateFlow(beersPagerUiState)
+    val uiStateFlow = _uiStateFlow.asStateFlow()
 
     @MainThread
     fun initialize() {
@@ -52,8 +51,7 @@ class MainViewModel @Inject constructor(
 
     fun onNavigateToLikedBeerList() {
         invalidateCurrentItemIndex()
-        isDisplayHomeAsUpEnabled = true
-        _appStateFlow.value = AppState.LikedBeersList
+        _uiStateFlow.value = likedBeersListUiState
     }
 
     private fun invalidateCurrentItemIndex() =
@@ -63,7 +61,6 @@ class MainViewModel @Inject constructor(
 
     fun onNavigateToBeerPager() {
         fetchBeers()
-        isDisplayHomeAsUpEnabled = false
-        _appStateFlow.value = AppState.BeersPager
+        _uiStateFlow.value = beersPagerUiState
     }
 }

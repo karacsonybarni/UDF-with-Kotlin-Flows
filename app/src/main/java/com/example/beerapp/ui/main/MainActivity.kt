@@ -1,4 +1,4 @@
-package com.example.beerapp.ui
+package com.example.beerapp.ui.main
 
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
@@ -42,16 +42,16 @@ class MainActivity : AppCompatActivity() {
     private fun collectAppStateFlow() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.appStateFlow.collect {
-                    bindUiState()
+                viewModel.uiStateFlow.collect {
+                    bindUiState(it)
                 }
             }
         }
     }
 
-    private fun bindUiState() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(viewModel.isDisplayHomeAsUpEnabled)
-        onBackPressedCallback.isEnabled = viewModel.isDisplayHomeAsUpEnabled
+    private fun bindUiState(uiState: MainUiState) {
+        supportActionBar?.setDisplayHomeAsUpEnabled(uiState.isDisplayHomeAsUpEnabled)
+        onBackPressedCallback.isEnabled = uiState.isDisplayHomeAsUpEnabled
     }
 
     override fun onSupportNavigateUp(): Boolean {

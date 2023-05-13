@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.beerapp.databinding.FragmentBeerBinding
-import com.example.beerapp.ui.MainActivity
+import com.example.beerapp.ui.main.MainActivity
 import com.example.beerapp.ui.model.Beer
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
