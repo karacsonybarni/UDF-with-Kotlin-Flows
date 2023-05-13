@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/pagerFragment">
+
+    <fragment
+        android:id="@+id/pagerFragment"
+        android:name="com.example.beerapp.ui.pager.PagerFragment"
+        android:label="@string/label_pager_fragment"
+        tools:layout="@layout/fragment_pager">
+        <action
+            android:id="@+id/action_pagerFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.example.beerapp.ui.list.BeerListFragment"
+        android:label="@string/label_liked_beers_list"
+        tools:layout="@layout/fragment_list" />
+
+</navigation>

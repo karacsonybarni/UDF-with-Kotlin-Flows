@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.beerapp.databinding.FragmentBeerBinding
-import com.example.beerapp.ui.MainViewModel
+import com.example.beerapp.ui.MainActivity
 import com.example.beerapp.ui.model.Beer
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,9 +28,10 @@ class BeerFragment : Fragment() {
     }
 
     private val pagerViewModel: PagerViewModel by activityViewModels()
-    private val mainViewModel: MainViewModel by activityViewModels()
     private var beer: Beer? = null
     private lateinit var binding: FragmentBeerBinding
+
+    private val mainActivity: MainActivity get() = activity as MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +69,7 @@ class BeerFragment : Fragment() {
         if (pagerViewModel.uiState.hasNextItem) {
             pagerViewModel.pageToNextBeer()
         } else {
-            mainViewModel.navigateToLikedBeerList()
+            mainActivity.navigateToLikedBeerList()
         }
     }
 

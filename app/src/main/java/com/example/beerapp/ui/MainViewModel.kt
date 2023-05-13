@@ -24,6 +24,8 @@ class MainViewModel @Inject constructor(
     private val _appStateFlow = MutableStateFlow(AppState.BeersPager)
     val appStateFlow = _appStateFlow.asStateFlow()
 
+    var isDisplayHomeAsUpEnabled = false
+
     init {
         _appStateFlow.value = AppState.BeersPager
     }
@@ -48,9 +50,10 @@ class MainViewModel @Inject constructor(
             beersRepository.fetch()
         }
 
-    fun navigateToLikedBeerList() {
-        _appStateFlow.value = AppState.LikedBeersList
+    fun onNavigateToLikedBeerList() {
         invalidateCurrentItemIndex()
+        isDisplayHomeAsUpEnabled = true
+        _appStateFlow.value = AppState.LikedBeersList
     }
 
     private fun invalidateCurrentItemIndex() =
@@ -58,8 +61,9 @@ class MainViewModel @Inject constructor(
             beersRepository.setCurrentItemIndex(null)
         }
 
-    fun navigateToBeerPager() {
-        _appStateFlow.value = AppState.BeersPager
+    fun onNavigateToBeerPager() {
         fetchBeers()
+        isDisplayHomeAsUpEnabled = false
+        _appStateFlow.value = AppState.BeersPager
     }
 }

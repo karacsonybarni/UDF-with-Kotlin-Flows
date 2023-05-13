@@ -4,4 +4,7 @@
     <string name="dislike">Dislike</string>
     <string name="picture_of_a_beer">Picture of a beer</string>
     <string name="liked_beers">Liked beers:</string>
+
+    <string name="label_pager_fragment">Beer pager</string>
+    <string name="label_liked_beers_list">Liked beers</string>
 </resources>
