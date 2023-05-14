@@ -61,6 +61,6 @@ class MainActivity : AppCompatActivity() {
 
     fun navigateToLikedBeerList() {
         viewModel.onNavigateToLikedBeerList()
-        navController.navigate(R.id.action_pagerFragment_to_listFragment)
+        navController.navigate(R.id.action_swiperFragment_to_listFragment)
     }
 }

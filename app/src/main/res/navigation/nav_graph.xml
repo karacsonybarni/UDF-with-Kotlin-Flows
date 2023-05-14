@@ -7,11 +7,10 @@
 
     <fragment
         android:id="@+id/pagerFragment"
-        android:name="com.example.beerapp.ui.pager.PagerFragment"
-        android:label="@string/label_pager_fragment"
-        tools:layout="@layout/fragment_pager">
+        android:name="com.example.beerapp.ui.pager.SwiperFragment"
+        android:label="@string/label_pager_fragment">
         <action
-            android:id="@+id/action_pagerFragment_to_listFragment"
+            android:id="@+id/action_swiperFragment_to_listFragment"
             app:destination="@id/listFragment" />
     </fragment>
 
