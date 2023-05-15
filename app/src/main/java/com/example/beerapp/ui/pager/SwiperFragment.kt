@@ -11,16 +11,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.font.FontWeight
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.beerapp.ui.main.MainActivity
 
 class SwiperFragment : Fragment() {
+
+    private val viewModel: PagerViewModel by activityViewModels()
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
@@ -31,10 +34,7 @@ class SwiperFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                val isEmpty = remember {
-                    mutableStateOf(false)
-                }
-
+                val uiState = viewModel.uiStateFlow.collectAsStateWithLifecycle()
                 Scaffold {
                     Column(
                         modifier = Modifier
@@ -43,15 +43,17 @@ class SwiperFragment : Fragment() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        if (!isEmpty.value) {
+                        if (uiState.value.beerMap.isNotEmpty()) {
                             CardStack(
-                                items = accounts,
+                                items = uiState.value.beerMap.values.toList(),
+                                onSwipeLeft = {},
+                                onSwipeRight = { beer -> viewModel.like(beer) },
                                 onEmptyStack = {
-                                    isEmpty.value = true
+                                    (activity as MainActivity).navigateToLikedBeerList()
                                 }
                             )
                         } else {
-                            Text(text = "No more cards", fontWeight = FontWeight.Bold)
+                            Text(text = "No cards", fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -59,9 +61,3 @@ class SwiperFragment : Fragment() {
         }
     }
 }
-
-val accounts = mutableListOf<Item>(
-    Item("https://images.unsplash.com/photo-1668069574922-bca50880fd70?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80", "Musician", "Alice (25)"),
-    Item("https://images.unsplash.com/photo-1618641986557-1ecd230959aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80", "Developer", "Chris (33)"),
-    Item("https://images.unsplash.com/photo-1667935764607-73fca1a86555?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80", "Teacher", "Roze (22)")
-)
