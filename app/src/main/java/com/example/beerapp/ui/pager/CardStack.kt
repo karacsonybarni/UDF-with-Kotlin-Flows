@@ -30,7 +30,7 @@ fun CardStack(
     onSwipeLeft: (item: Beer) -> Unit,
     onSwipeRight: (item: Beer) -> Unit,
     onEmptyStack: () -> Unit,
-    thresholdConfig: (Float, Float) -> ThresholdConfig = { _, _ -> FractionalThreshold(0.2f)},
+    thresholdConfig: (Float, Float) -> ThresholdConfig = { _, _ -> FractionalThreshold(0.2f) },
     velocityThreshold: Dp = 125.dp
 ) {
     var i by rememberSaveable(items.size) {
@@ -108,7 +108,7 @@ fun Modifier.moveTo(
 
 fun Modifier.visible(
     visible: Boolean = true
-) = this.then(Modifier.layout{ measurable, constraints ->
+) = this.then(Modifier.layout { measurable, constraints ->
     val placeable = measurable.measure(constraints)
 
     if (visible) {
@@ -126,50 +126,58 @@ fun Card(
     item: Beer,
     cardStackController: CardStackController
 ) {
-    Box(modifier = modifier) {
-        if (item.imageUrl != null) {
-            AsyncImage(
-                model = item.imageUrl,
-                contentDescription = "",
-                contentScale = ContentScale.Fit,
-                modifier = modifier.fillMaxSize()
-            )
-        }
+    Surface {
+        Box(modifier = modifier) {
+            if (item.imageUrl != null) {
+                AsyncImage(
+                    model = item.imageUrl,
+                    contentDescription = "",
+                    contentScale = ContentScale.Fit,
+                    modifier = modifier.fillMaxSize()
+                )
+            }
 
-        Column(
-            modifier = modifier
-                .align(Alignment.BottomStart)
-                .padding(10.dp)
-        ) {
-            Text(text = item.name, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 25.sp)
+            Column(
+                modifier = modifier
+                    .align(Alignment.BottomStart)
+                    .padding(10.dp)
+            ) {
+                Text(text = item.name, fontWeight = FontWeight.Bold, fontSize = 25.sp)
 
-            Text(text = item.tagline, color = Color.White, fontSize = 20.sp)
+                Text(text = item.tagline, fontSize = 20.sp)
 
-            Row {
-                IconButton(
-                    modifier = modifier.padding(50.dp, 0.dp, 0.dp, 0.dp),
-                    onClick = { cardStackController.swipeLeft() },
-                ) {
-                    Icon(
-                        Icons.Default.Close, contentDescription = "", tint = Color.White, modifier =
-                        modifier
-                            .height(50.dp)
-                            .width(50.dp)
-                    )
-                }
+                Row {
+                    IconButton(
+                        modifier = modifier.padding(50.dp, 0.dp, 0.dp, 0.dp),
+                        onClick = { cardStackController.swipeLeft() },
+                    ) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "",
+                            tint = Color.White,
+                            modifier =
+                            modifier
+                                .height(50.dp)
+                                .width(50.dp)
+                        )
+                    }
 
-                Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(1f))
 
-                IconButton(
-                    modifier = modifier.padding(0.dp, 0.dp, 50.dp, 0.dp),
-                    onClick = { cardStackController.swipeRight() }
-                ) {
-                    Icon(
-                        Icons.Default.FavoriteBorder, contentDescription = "", tint = Color.White, modifier =
-                        modifier
-                            .height(50.dp)
-                            .width(50.dp)
-                    )
+                    IconButton(
+                        modifier = modifier.padding(0.dp, 0.dp, 50.dp, 0.dp),
+                        onClick = { cardStackController.swipeRight() }
+                    ) {
+                        Icon(
+                            Icons.Default.FavoriteBorder,
+                            contentDescription = "",
+                            tint = Color.White,
+                            modifier =
+                            modifier
+                                .height(50.dp)
+                                .width(50.dp)
+                        )
+                    }
                 }
             }
         }

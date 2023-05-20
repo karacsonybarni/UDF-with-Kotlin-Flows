@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.beerapp.ui.main.MainActivity
+import com.example.beerapp.ui.theme.AppTheme
 
 class SwiperFragment : Fragment() {
 
@@ -34,26 +35,28 @@ class SwiperFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                val uiState = viewModel.uiStateFlow.collectAsStateWithLifecycle()
-                Scaffold {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        if (uiState.value.beerMap.isNotEmpty()) {
-                            CardStack(
-                                items = uiState.value.beerMap.values.toList(),
-                                onSwipeLeft = {},
-                                onSwipeRight = { beer -> viewModel.like(beer) },
-                                onEmptyStack = {
-                                    (activity as MainActivity).navigateToLikedBeerList()
-                                }
-                            )
-                        } else {
-                            Text(text = "No cards", fontWeight = FontWeight.Bold)
+                AppTheme {
+                    val uiState = viewModel.uiStateFlow.collectAsStateWithLifecycle()
+                    Scaffold {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(it),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            if (uiState.value.beerMap.isNotEmpty()) {
+                                CardStack(
+                                    items = uiState.value.beerMap.values.toList(),
+                                    onSwipeLeft = {},
+                                    onSwipeRight = { beer -> viewModel.like(beer) },
+                                    onEmptyStack = {
+                                        (activity as MainActivity).navigateToLikedBeerList()
+                                    }
+                                )
+                            } else {
+                                Text(text = "No cards", fontWeight = FontWeight.Bold)
+                            }
                         }
                     }
                 }
