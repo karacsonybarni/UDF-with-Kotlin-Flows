@@ -1,4 +1,4 @@
-package com.example.beerapp.ui.pager
+package com.example.beerapp.ui.swiper
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -30,8 +29,7 @@ fun CardStack(
     onSwipeLeft: (item: Beer) -> Unit,
     onSwipeRight: (item: Beer) -> Unit,
     onEmptyStack: () -> Unit,
-    thresholdConfig: (Float, Float) -> ThresholdConfig = { _, _ -> FractionalThreshold(0.2f) },
-    velocityThreshold: Dp = 125.dp
+    thresholdConfig: (Float, Float) -> ThresholdConfig = { _, _ -> FractionalThreshold(0.2f) }
 ) {
     var i by rememberSaveable(items.size) {
         mutableStateOf(items.size - 1)
@@ -69,8 +67,7 @@ fun CardStack(
                 }
                 .draggableStack(
                     controller = cardStackController,
-                    thresholdConfig = thresholdConfig,
-                    velocityThreshold = velocityThreshold
+                    thresholdConfig = thresholdConfig
                 )
                 .fillMaxHeight()
         ) {

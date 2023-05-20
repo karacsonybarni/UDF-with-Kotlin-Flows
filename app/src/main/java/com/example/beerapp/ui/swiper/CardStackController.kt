@@ -1,4 +1,4 @@
-package com.example.beerapp.ui.pager
+package com.example.beerapp.ui.swiper
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
@@ -16,7 +16,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -144,15 +143,9 @@ fun rememberCardStackController(
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 fun Modifier.draggableStack(
     controller: CardStackController,
-    thresholdConfig: (Float, Float) -> ThresholdConfig,
-    velocityThreshold: Dp = 125.dp
+    thresholdConfig: (Float, Float) -> ThresholdConfig
 ): Modifier = composed {
-    val scope = rememberCoroutineScope()
     val density = LocalDensity.current
-
-    val velocityThresholdPx = with(density) {
-        velocityThreshold.toPx()
-    }
 
     val thresholds = { a: Float, b: Float ->
         with(thresholdConfig(a, b)) {

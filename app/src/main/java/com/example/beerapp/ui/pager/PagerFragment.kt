@@ -11,13 +11,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2
 import com.example.beerapp.databinding.FragmentPagerBinding
+import com.example.beerapp.ui.swiper.SwiperViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PagerFragment : Fragment() {
 
-    private val viewModel: PagerViewModel by activityViewModels()
+    private val viewModel: SwiperViewModel by activityViewModels()
 
     private lateinit var binding: FragmentPagerBinding
     private lateinit var adapter: PagerAdapter

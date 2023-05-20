@@ -1,4 +1,4 @@
-package com.example.beerapp.ui.pager
+package com.example.beerapp.ui.swiper
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,26 +18,26 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PagerViewModel @Inject constructor(
+class SwiperViewModel @Inject constructor(
     private val beersRepository: BeersRepository,
     @DefaultDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-    val uiStateFlow: StateFlow<PagerUiState> = beersRepository.allBeersFlow
+    val uiStateFlow: StateFlow<SwiperUiState> = beersRepository.allBeersFlow
         .map { beerDataModelMap ->
             beerDataModelMap.mapValues { it.value.toBeer() }
         }
         .combine(beersRepository.currentItemIndexFlow) { beers, currentItemIndex ->
-            PagerUiState(beers, currentItemIndex)
+            SwiperUiState(beers, currentItemIndex)
         }
         .flowOn(coroutineDispatcher)
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
-            PagerUiState(emptyMap(), null)
+            SwiperUiState(emptyMap(), null)
         )
 
-    val uiState: PagerUiState get() = uiStateFlow.value
+    val uiState: SwiperUiState get() = uiStateFlow.value
 
     fun like(beer: Beer) =
         viewModelScope.launch {

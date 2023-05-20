@@ -1,9 +1,9 @@
-package com.example.beerapp.ui.pager
+package com.example.beerapp.ui.swiper
 
 import com.example.beerapp.ui.model.Beer
 
 // Null currentItemIndex means that there are no beers so the index is invalid
-data class PagerUiState(val beerMap: Map<Long, Beer>, val currentItemIndex: Int?) {
+data class SwiperUiState(val beerMap: Map<Long, Beer>, val currentItemIndex: Int?) {
 
     val nextItemIndex: Int get() = (currentItemIndex ?: 0) + 1
 

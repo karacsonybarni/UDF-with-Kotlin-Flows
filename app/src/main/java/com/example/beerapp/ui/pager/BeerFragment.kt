@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.beerapp.databinding.FragmentBeerBinding
 import com.example.beerapp.ui.main.MainActivity
 import com.example.beerapp.ui.model.Beer
+import com.example.beerapp.ui.swiper.SwiperViewModel
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,7 +28,7 @@ class BeerFragment : Fragment() {
             }
     }
 
-    private val pagerViewModel: PagerViewModel by activityViewModels()
+    private val swiperViewModel: SwiperViewModel by activityViewModels()
     private var beer: Beer? = null
     private lateinit var binding: FragmentBeerBinding
 
@@ -37,7 +38,7 @@ class BeerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             val id = it.getLong(ARG_ID)
-            beer = pagerViewModel.uiState.beerMap[id]
+            beer = swiperViewModel.uiState.beerMap[id]
         }
     }
 
@@ -56,7 +57,7 @@ class BeerFragment : Fragment() {
         binding.tagline.text = beer.tagline
         binding.likeButton.setOnClickListener {
             it.isEnabled = false
-            pagerViewModel.like(beer)
+            swiperViewModel.like(beer)
             pageToNextBeerOrEndPager()
         }
         binding.dislikeButton.setOnClickListener {
@@ -66,8 +67,8 @@ class BeerFragment : Fragment() {
     }
 
     private fun pageToNextBeerOrEndPager() {
-        if (pagerViewModel.uiState.hasNextItem) {
-            pagerViewModel.pageToNextBeer()
+        if (swiperViewModel.uiState.hasNextItem) {
+            swiperViewModel.pageToNextBeer()
         } else {
             mainActivity.navigateToLikedBeerList()
         }

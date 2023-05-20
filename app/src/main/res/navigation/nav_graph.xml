@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/pagerFragment"
-        android:name="com.example.beerapp.ui.pager.SwiperFragment"
+        android:name="com.example.beerapp.ui.swiper.SwiperFragment"
         android:label="@string/label_pager_fragment">
         <action
             android:id="@+id/action_swiperFragment_to_listFragment"

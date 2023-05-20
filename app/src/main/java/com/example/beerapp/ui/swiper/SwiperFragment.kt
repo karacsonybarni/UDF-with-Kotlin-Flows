@@ -1,4 +1,4 @@
-package com.example.beerapp.ui.pager
+package com.example.beerapp.ui.swiper
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,7 +24,7 @@ import com.example.beerapp.ui.theme.AppTheme
 
 class SwiperFragment : Fragment() {
 
-    private val viewModel: PagerViewModel by activityViewModels()
+    private val viewModel: SwiperViewModel by activityViewModels()
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
