@@ -1,5 +1,6 @@
 package com.example.beerapp.ui.swiper
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -9,11 +10,14 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -124,15 +128,35 @@ fun Card(
     cardStackController: CardStackController
 ) {
     Surface {
+
+        var sizeImage by remember { mutableStateOf(IntSize.Zero) }
+
+        val gradient = Brush.verticalGradient(
+            colors = listOf(Color.Transparent, Color.White),
+            startY = sizeImage.height.toFloat() / 2,
+            endY = sizeImage.height.toFloat()
+        )
+
         Box(modifier = modifier) {
             if (item.imageUrl != null) {
                 AsyncImage(
                     model = item.imageUrl,
                     contentDescription = "",
                     contentScale = ContentScale.Fit,
-                    modifier = modifier.fillMaxSize()
+                    modifier = modifier
+                        .fillMaxSize()
+                        .onGloballyPositioned {
+                            sizeImage = it.size
+                        }
+                        .padding(32.dp)
                 )
             }
+
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(brush = gradient)
+            )
 
             Column(
                 modifier = modifier
@@ -151,7 +175,7 @@ fun Card(
                         Icon(
                             Icons.Default.Close,
                             contentDescription = "",
-                            tint = Color.White,
+                            tint = Color.Red,
                             modifier =
                             modifier
                                 .height(50.dp)
@@ -168,7 +192,7 @@ fun Card(
                         Icon(
                             Icons.Default.FavoriteBorder,
                             contentDescription = "",
-                            tint = Color.White,
+                            tint = Color.Green,
                             modifier =
                             modifier
                                 .height(50.dp)
